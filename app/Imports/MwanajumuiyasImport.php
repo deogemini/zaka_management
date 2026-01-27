@@ -20,25 +20,53 @@ class MwanajumuiyasImport implements ToCollection, WithHeadingRow
         $this->jumuiyaId = $jumuiyaId;
     }
 
+    protected function getFirstValue(array $row, array $keys): ?string
+    {
+        foreach ($keys as $key) {
+            if (isset($row[$key]) && $row[$key] !== null && $row[$key] !== '') {
+                return trim((string) $row[$key]);
+            }
+        }
+        return null;
+    }
+
+    protected function normalizePhone(?string $phone): ?string
+    {
+        if ($phone === null) return null;
+        $p = preg_replace('/\s+/', '', $phone);
+        return $p;
+    }
+
     public function collection(Collection $rows)
     {
         foreach ($rows as $index => $row) {
             try {
-                $name = $row['jina_la_mwanajumuiya'] ?? null;
-                $kadi = $row['kadi_namba'] ?? null;
-                $simu = $row['namba_ya_simu'] ?? null;
-                $jumuiyaName = $row['jumuiya'] ?? null;
+                $data = is_array($row) ? $row : $row->toArray();
+                $name = $this->getFirstValue($data, ['jina_la_mwanajumuiya', 'jina', 'mwanajumuiya', 'mwanajumuiya_name']);
+                $kadi = $this->getFirstValue($data, ['kadi_namba', 'kadi', 'card_no', 'kadi_no']);
+                $simuRaw = $this->getFirstValue($data, ['namba_ya_simu', 'simu', 'phone', 'namba', 'contact']);
+                $simu = $this->normalizePhone($simuRaw);
+                $jumuiyaName = $this->getFirstValue($data, ['jumuiya', 'jina_la_jumuiya', 'community']);
 
                 if ($this->jumuiyaId) {
                     if (!$name || !$kadi || !$simu) {
                         $this->skipped++;
-                        $this->errors[] = "Row ".($index+2).": Missing required fields.";
+                        $missing = [];
+                        if (!$name) $missing[] = 'jina_la_mwanajumuiya';
+                        if (!$kadi) $missing[] = 'kadi_namba';
+                        if (!$simu) $missing[] = 'namba_ya_simu';
+                        $this->errors[] = "Row ".($index+2).": Missing required fields: ".implode(', ', $missing).".";
                         continue;
                     }
                 } else {
                     if (!$name || !$kadi || !$simu || !$jumuiyaName) {
                         $this->skipped++;
-                        $this->errors[] = "Row ".($index+2).": Missing required fields.";
+                        $missing = [];
+                        if (!$name) $missing[] = 'jina_la_mwanajumuiya';
+                        if (!$kadi) $missing[] = 'kadi_namba';
+                        if (!$simu) $missing[] = 'namba_ya_simu';
+                        if (!$jumuiyaName) $missing[] = 'jumuiya';
+                        $this->errors[] = "Row ".($index+2).": Missing required fields: ".implode(', ', $missing).".";
                         continue;
                     }
                 }
