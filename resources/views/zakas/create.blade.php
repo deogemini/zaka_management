@@ -67,8 +67,8 @@
                         @enderror
                     </div>
                     <div class="mb-3">
-                        <label class="form-label">Muda wa Malipo</label>
-                        <input type="datetime-local" class="form-control @error('paid_at') is-invalid @enderror" name="paid_at" value="{{ old('paid_at') }}">
+                        <label class="form-label">Tarehe ya Malipo</label>
+                        <input type="date" class="form-control @error('paid_at') is-invalid @enderror" name="paid_at" value="{{ old('paid_at', date('Y-m-d')) }}">
                         @error('paid_at')
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror

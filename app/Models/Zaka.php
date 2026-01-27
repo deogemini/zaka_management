@@ -16,7 +16,7 @@ class Zaka extends Model
     ];
 
     protected $casts = [
-        'paid_at' => 'datetime',
+        'paid_at' => 'date',
         'kiasi' => 'decimal:2',
     ];
 
