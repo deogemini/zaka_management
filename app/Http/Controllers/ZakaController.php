@@ -72,7 +72,7 @@ class ZakaController extends Controller
         $request->validate([
             'mwanajumuiya_id' => 'required|exists:mwanajumuiyas,id',
             'kiasi' => 'required|numeric|min:0',
-            'risiti_namba' => 'required|string|max:255|unique:zakas,risiti_namba',
+            'risiti_namba' => 'required|string|max:255',
             'mode_ya_malipo' => 'required|string|max:100',
             'hali_ya_malipo' => 'nullable|string|max:100',
             'paid_at' => 'required|date',
@@ -110,7 +110,7 @@ class ZakaController extends Controller
         $request->validate([
             'mwanajumuiya_id' => 'required|exists:mwanajumuiyas,id',
             'kiasi' => 'required|numeric|min:0',
-            'risiti_namba' => 'required|string|max:255|unique:zakas,risiti_namba,' . $id,
+            'risiti_namba' => 'required|string|max:255',
             'mode_ya_malipo' => 'required|string|max:100',
             'hali_ya_malipo' => 'nullable|string|max:100',
             'paid_at' => 'required|date',

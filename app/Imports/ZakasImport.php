@@ -60,9 +60,9 @@ class ZakasImport implements ToCollection, WithHeadingRow
                     continue;
                 }
 
-                if (Zaka::where('risiti_namba', $risiti)->exists()) {
+                if (!$risiti) {
                     $this->skipped++;
-                    $this->errors[] = "Row ".($index+2).": Duplicate risiti_namba '{$risiti}'.";
+                    $this->errors[] = "Row ".($index+2).": Missing 'risiti_namba'.";
                     continue;
                 }
 
