@@ -49,20 +49,18 @@ class MwanajumuiyasImport implements ToCollection, WithHeadingRow
                 $jumuiyaName = $this->getFirstValue($data, ['jumuiya', 'jina_la_jumuiya', 'community']);
 
                 if ($this->jumuiyaId) {
-                    if (!$name || !$simu) {
+                    if (!$name) {
                         $this->skipped++;
                         $missing = [];
                         if (!$name) $missing[] = 'jina_la_mwanajumuiya';
-                        if (!$simu) $missing[] = 'namba_ya_simu';
                         $this->errors[] = "Row ".($index+2).": Missing required fields: ".implode(', ', $missing).".";
                         continue;
                     }
                 } else {
-                    if (!$name || !$simu || !$jumuiyaName) {
+                    if (!$name || !$jumuiyaName) {
                         $this->skipped++;
                         $missing = [];
                         if (!$name) $missing[] = 'jina_la_mwanajumuiya';
-                        if (!$simu) $missing[] = 'namba_ya_simu';
                         if (!$jumuiyaName) $missing[] = 'jumuiya';
                         $this->errors[] = "Row ".($index+2).": Missing required fields: ".implode(', ', $missing).".";
                         continue;
@@ -73,7 +71,7 @@ class MwanajumuiyasImport implements ToCollection, WithHeadingRow
                     $kadi = '0';
                 }
 
-                if (Mwanajumuiya::where('namba_ya_simu', $simu)->exists()) {
+                if ($simu && $simu !== '' && Mwanajumuiya::where('namba_ya_simu', $simu)->exists()) {
                     $this->skipped++;
                     $this->errors[] = "Row ".($index+2).": Duplicate namba_ya_simu '{$simu}'.";
                     continue;
@@ -99,7 +97,7 @@ class MwanajumuiyasImport implements ToCollection, WithHeadingRow
                     'jumuiya_id' => $jumuiya->id,
                     'jina_la_mwanajumuiya' => (string) $name,
                     'kadi_namba' => (string) $kadi,
-                    'namba_ya_simu' => (string) $simu,
+                    'namba_ya_simu' => (string) ($simu ?? ''),
                 ]);
 
                 $this->created++;
