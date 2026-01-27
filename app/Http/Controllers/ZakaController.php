@@ -36,7 +36,15 @@ class ZakaController extends Controller
                 $preselectedJumuiyaId = $found->jumuiya->id;
             }
         }
-        return view('zakas.create', compact('wanajumuiya', 'jumuiyas', 'preselectedId', 'preselectedJumuiyaId'));
+        $memberData = $wanajumuiya->map(function($m){
+            return [
+                'id' => $m->id,
+                'name' => $m->jina_la_mwanajumuiya,
+                'jumuiya_id' => optional($m->jumuiya)->id,
+                'jumuiya_name' => optional($m->jumuiya)->jina_la_jumuiya,
+            ];
+        })->values();
+        return view('zakas.create', compact('wanajumuiya', 'jumuiyas', 'preselectedId', 'preselectedJumuiyaId', 'memberData'));
     }
 
     public function importForm()

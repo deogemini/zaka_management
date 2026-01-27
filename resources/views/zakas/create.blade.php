@@ -95,16 +95,6 @@
         </div>
     </div>
 </div>
-@php
-    $memberData = ($wanajumuiya ?? collect())->map(function($m){
-        return [
-            'id' => $m->id,
-            'name' => $m->jina_la_mwanajumuiya,
-            'jumuiya_id' => $m->jumuiya->id,
-            'jumuiya_name' => $m->jumuiya->jina_la_jumuiya,
-        ];
-    })->values();
-@endphp
 @push('scripts')
 <script>
     (function(){
