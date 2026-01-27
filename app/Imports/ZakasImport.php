@@ -70,8 +70,8 @@ class ZakasImport implements ToCollection, WithHeadingRow
                     'mwanajumuiya_id' => $mwana->id,
                     'kiasi' => (float) $kiasi,
                     'risiti_namba' => (string) $risiti,
-                    'mode_ya_malipo' => (string) $mode,
-                    'hali_ya_malipo' => $hali ? (string) $hali : null,
+                    'mode_ya_malipo' => (string) ($mode ?: 'cash'),
+                    'hali_ya_malipo' => (string) ($hali ?: 'full'),
                     'paid_at' => Carbon::parse($paidAt),
                 ]);
 

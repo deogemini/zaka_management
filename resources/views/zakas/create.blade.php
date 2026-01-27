@@ -43,10 +43,10 @@
                     <div class="mb-3">
                         <label class="form-label">Mode ya Malipo</label>
                         <select class="form-select @error('mode_ya_malipo') is-invalid @enderror" name="mode_ya_malipo">
-                            <option selected disabled>Chagua Mode</option>
+                            <option disabled>Chagua Mode</option>
                             @php($modes = ['cash' => 'Cash', 'mpesa' => 'M-Pesa', 'bank' => 'Bank', 'other' => 'Other'])
                             @foreach($modes as $value => $label)
-                                <option value="{{ $value }}" {{ old('mode_ya_malipo') == $value ? 'selected' : '' }}>{{ $label }}</option>
+                                <option value="{{ $value }}" {{ old('mode_ya_malipo', 'cash') == $value ? 'selected' : '' }}>{{ $label }}</option>
                             @endforeach
                         </select>
                         @error('mode_ya_malipo')
@@ -59,7 +59,7 @@
                             @php($conditions = ['full' => 'Full', 'partial' => 'Partial'])
                             <option value="">-- Hiari --</option>
                             @foreach($conditions as $value => $label)
-                                <option value="{{ $value }}" {{ old('hali_ya_malipo') == $value ? 'selected' : '' }}>{{ $label }}</option>
+                                <option value="{{ $value }}" {{ old('hali_ya_malipo', 'full') == $value ? 'selected' : '' }}>{{ $label }}</option>
                             @endforeach
                         </select>
                         @error('hali_ya_malipo')

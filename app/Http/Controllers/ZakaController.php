@@ -73,12 +73,15 @@ class ZakaController extends Controller
             'mwanajumuiya_id' => 'required|exists:mwanajumuiyas,id',
             'kiasi' => 'required|numeric|min:0',
             'risiti_namba' => 'required|string|max:255',
-            'mode_ya_malipo' => 'required|string|max:100',
+            'mode_ya_malipo' => 'nullable|string|max:100',
             'hali_ya_malipo' => 'nullable|string|max:100',
             'paid_at' => 'required|date',
         ]);
 
-        $zaka = Zaka::create($request->all());
+        $data = $request->all();
+        $data['mode_ya_malipo'] = $data['mode_ya_malipo'] ?? 'cash';
+        $data['hali_ya_malipo'] = $data['hali_ya_malipo'] ?? 'full';
+        $zaka = Zaka::create($data);
         AuditService::log('zaka.create', $zaka, $zaka->getAttributes());
 
         return redirect()->route('zakas.index')->with('success', 'Zaka imeandikishwa kikamilifu.');
@@ -111,14 +114,17 @@ class ZakaController extends Controller
             'mwanajumuiya_id' => 'required|exists:mwanajumuiyas,id',
             'kiasi' => 'required|numeric|min:0',
             'risiti_namba' => 'required|string|max:255',
-            'mode_ya_malipo' => 'required|string|max:100',
+            'mode_ya_malipo' => 'nullable|string|max:100',
             'hali_ya_malipo' => 'nullable|string|max:100',
             'paid_at' => 'required|date',
         ]);
 
         $zaka = Zaka::findOrFail($id);
         $original = $zaka->getOriginal();
-        $zaka->update($request->all());
+        $data = $request->all();
+        $data['mode_ya_malipo'] = $data['mode_ya_malipo'] ?? 'cash';
+        $data['hali_ya_malipo'] = $data['hali_ya_malipo'] ?? 'full';
+        $zaka->update($data);
         $changes = [];
         foreach ($zaka->getChanges() as $key => $value) {
             $changes[$key] = ['from' => $original[$key] ?? null, 'to' => $value];
