@@ -10,7 +10,7 @@ class Jumuiya extends Model
         'kanda_id',
         'jina_la_jumuiya',
     ];
- 
+
     public function kanda()
     {
         return $this->belongsTo(Kanda::class);
@@ -19,5 +19,10 @@ class Jumuiya extends Model
     public function wanajumuiya()
     {
         return $this->hasMany(Mwanajumuiya::class);
+    }
+
+    public function watoto()
+    {
+        return $this->hasMany(Watoto::class);
     }
 }

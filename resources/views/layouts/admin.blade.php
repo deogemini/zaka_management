@@ -63,6 +63,11 @@
               <i class="align-middle" data-feather="dollar-sign"></i> <span class="align-middle">Zaka Management</span>
             </a>
 					</li>
+                    <li class="sidebar-item {{ request()->routeIs('watotos.*') ? 'active' : '' }}">
+						<a class="sidebar-link" href="{{ route('watotos.index') }}">
+              <i class="align-middle" data-feather="smile"></i> <span class="align-middle">Watoto Management</span>
+            </a>
+					</li>
 
                     <li class="sidebar-item {{ request()->routeIs('reports.*') ? 'active' : '' }}">
                         <a data-bs-target="#reports" data-bs-toggle="collapse" class="sidebar-link collapsed">

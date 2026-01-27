@@ -32,6 +32,7 @@ Route::middleware('auth')->group(function () {
     Route::middleware(AdminMiddleware::class)->group(function () {
         Route::resource('users', UserController::class);
     });
+    Route::resource('watotos', App\Http\Controllers\WatotoController::class);
     Route::get('zakas/import', [ZakaController::class, 'importForm'])->name('zakas.import.form');
     Route::post('zakas/import', [ZakaController::class, 'import'])->name('zakas.import');
     Route::get('zakas/sample', [ZakaController::class, 'sample'])->name('zakas.sample');
