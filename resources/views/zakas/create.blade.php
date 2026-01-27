@@ -13,6 +13,21 @@
                 <form action="{{ route('zakas.store') }}" method="POST">
                     @csrf
                     <div class="mb-3">
+                        <label class="form-label">Chagua Jumuiya</label>
+                        <select id="jumuiya-filter" class="form-select">
+                            <option value="">-- Chagua Jumuiya --</option>
+                            @foreach(($jumuiyas ?? []) as $j)
+                                <option value="{{ $j->id }}" {{ (string)($preselectedJumuiyaId ?? '') === (string)$j->id ? 'selected' : '' }}>
+                                    {{ $j->jina_la_jumuiya }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Tafuta Jina la Mwanajumuiya</label>
+                        <input type="text" id="mwana-search" class="form-control" placeholder="Andika jina kutafuta">
+                    </div>
+                    <div class="mb-3">
                         <label class="form-label">Mwanajumuiya</label>
                         <select class="form-select @error('mwanajumuiya_id') is-invalid @enderror" name="mwanajumuiya_id">
                             <option selected disabled>Chagua Mwanajumuiya</option>
@@ -80,4 +95,50 @@
         </div>
     </div>
 </div>
+@php
+    $memberData = ($wanajumuiya ?? collect())->map(function($m){
+        return [
+            'id' => $m->id,
+            'name' => $m->jina_la_mwanajumuiya,
+            'jumuiya_id' => $m->jumuiya->id,
+            'jumuiya_name' => $m->jumuiya->jina_la_jumuiya,
+        ];
+    })->values();
+@endphp
+@push('scripts')
+<script>
+    (function(){
+        var members = @json($memberData);
+        var jumuiyaSelect = document.getElementById('jumuiya-filter');
+        var searchInput = document.getElementById('mwana-search');
+        var memberSelect = document.querySelector('select[name="mwanajumuiya_id"]');
+        function renderOptions() {
+            var jId = jumuiyaSelect ? jumuiyaSelect.value : '';
+            var q = (searchInput ? searchInput.value : '').toLowerCase();
+            var list = members.filter(function(m){
+                var okJ = jId ? (String(m.jumuiya_id) === String(jId)) : true;
+                var okQ = q ? (m.name.toLowerCase().includes(q)) : true;
+                return okJ && okQ;
+            });
+            var current = memberSelect.value;
+            memberSelect.innerHTML = '';
+            var ph = document.createElement('option');
+            ph.textContent = 'Chagua Mwanajumuiya';
+            ph.disabled = true;
+            ph.selected = !current;
+            memberSelect.appendChild(ph);
+            list.forEach(function(m){
+                var opt = document.createElement('option');
+                opt.value = m.id;
+                opt.textContent = m.name + ' (' + m.jumuiya_name + ')';
+                if (String(current) === String(m.id)) opt.selected = true;
+                memberSelect.appendChild(opt);
+            });
+        }
+        if (jumuiyaSelect) jumuiyaSelect.addEventListener('change', renderOptions);
+        if (searchInput) searchInput.addEventListener('input', renderOptions);
+        renderOptions();
+    })();
+</script>
+@endpush
 @endsection

@@ -27,8 +27,16 @@ class ZakaController extends Controller
     public function create(Request $request)
     {
         $wanajumuiya = Mwanajumuiya::with('jumuiya')->get();
+        $jumuiyas = \App\Models\Jumuiya::orderBy('jina_la_jumuiya')->get();
         $preselectedId = $request->query('mwanajumuiya_id');
-        return view('zakas.create', compact('wanajumuiya', 'preselectedId'));
+        $preselectedJumuiyaId = null;
+        if ($preselectedId) {
+            $found = $wanajumuiya->firstWhere('id', (int) $preselectedId);
+            if ($found) {
+                $preselectedJumuiyaId = $found->jumuiya->id;
+            }
+        }
+        return view('zakas.create', compact('wanajumuiya', 'jumuiyas', 'preselectedId', 'preselectedJumuiyaId'));
     }
 
     public function importForm()
