@@ -4,7 +4,7 @@
 
     <div class="mb-6">
         <h2 class="text-xs uppercase tracking-widest text-indigo-600 font-semibold">Zaka Management System</h2>
-        <h1 class="mt-1 text-2xl font-bold text-gray-900">Bombambili Parish</h1>
+        <h1 class="mt-1 text-3xl font-bold text-gray-900">Bombambili Parish</h1>
         <p class="text-sm text-gray-600 mt-2">Sign in to continue. Accounts are created by the admin.</p>
     </div>
 
@@ -33,7 +33,7 @@
         <div class="mt-6 space-y-4">
             <div class="flex items-center justify-between">
                 @if (Route::has('password.request'))
-                    <a class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" href="{{ route('password.request') }}">
+                    <a class="text-sm text-indigo-600 hover:text-indigo-700 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" href="{{ route('password.request') }}">
                         {{ __('Forgot your password?') }}
                     </a>
                 @endif
@@ -42,7 +42,7 @@
                     <span class="ms-2 text-sm text-gray-600">{{ __('Remember me') }}</span>
                 </label>
             </div>
-            <x-primary-button class="w-full justify-center py-3 text-sm">
+            <x-primary-button class="w-full justify-center py-3 text-sm shadow-md">
                 {{ __('Log in') }}
             </x-primary-button>
         </div>
