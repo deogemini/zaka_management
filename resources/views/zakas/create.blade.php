@@ -95,17 +95,20 @@
         </div>
     </div>
 </div>
+@php
+    $memberData = ($wanajumuiya ?? collect())->map(function($m){
+        return [
+            'id' => $m->id,
+            'name' => $m->jina_la_mwanajumuiya,
+            'jumuiya_id' => $m->jumuiya->id,
+            'jumuiya_name' => $m->jumuiya->jina_la_jumuiya,
+        ];
+    })->values();
+@endphp
 @push('scripts')
 <script>
     (function(){
-        var members = @json(isset($memberData) ? $memberData : (($wanajumuiya ?? collect())->map(function($m){
-            return [
-                'id' => $m->id,
-                'name' => $m->jina_la_mwanajumuiya,
-                'jumuiya_id' => $m->jumuiya->id,
-                'jumuiya_name' => $m->jumuiya->jina_la_jumuiya,
-            ];
-        })->values()));
+        var members = @json($memberData);
         var jumuiyaSelect = document.getElementById('jumuiya-filter');
         var searchInput = document.getElementById('mwana-search');
         var memberSelect = document.querySelector('select[name="mwanajumuiya_id"]');
