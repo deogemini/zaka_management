@@ -14,7 +14,6 @@
                                 <div class="col mt-0">
                                     <h5 class="card-title">Jumla ya Zaka (Tsh)</h5>
                                 </div>
-
                                 <div class="col-auto">
                                     <div class="stat text-primary">
                                         <i class="align-middle" data-feather="dollar-sign"></i>
@@ -25,22 +24,6 @@
                             <div class="mb-0">
                                 <span class="text-muted">Kwa mwaka {{ $year }}</span>
                             </div>
-                        </div>
-                    </div>
-                    <div class="card">
-                        <div class="card-body">
-                            <div class="row">
-                                <div class="col mt-0">
-                                    <h5 class="card-title">Wanajumuiya Registered</h5>
-                                </div>
-
-                                <div class="col-auto">
-                                    <div class="stat text-primary">
-                                        <i class="align-middle" data-feather="users"></i>
-                                    </div>
-                                </div>
-                            </div>
-                            <h1 class="mt-1 mb-3">{{ number_format($totalWanajumuiya) }}</h1>
                         </div>
                     </div>
                 </div>
@@ -62,6 +45,42 @@
                             <div class="mb-0">
                                 <span class="text-muted">Kwa mwaka {{ $year }}</span>
                             </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row mt-3">
+                <div class="col-sm-6">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col mt-0">
+                                    <h5 class="card-title">Wanajumuiya Registered</h5>
+                                </div>
+                                <div class="col-auto">
+                                    <div class="stat text-primary">
+                                        <i class="align-middle" data-feather="users"></i>
+                                    </div>
+                                </div>
+                            </div>
+                            <h1 class="mt-1 mb-3">{{ number_format($totalWanajumuiya) }}</h1>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col mt-0">
+                                    <h5 class="card-title">Watoto Registered</h5>
+                                </div>
+                                <div class="col-auto">
+                                    <div class="stat text-primary">
+                                        <i class="align-middle" data-feather="smile"></i>
+                                    </div>
+                                </div>
+                            </div>
+                            <h1 class="mt-1 mb-3">{{ number_format($totalWatoto) }}</h1>
                         </div>
                     </div>
                 </div>
@@ -130,6 +149,7 @@
         </div>
     </div>
 </div>
+<div class="row mt-3">
     <div class="col-12 col-lg-6">
         <div class="card flex-fill">
             <div class="card-header">
@@ -154,6 +174,7 @@
             </div>
         </div>
     </div>
+</div>
 
 @endsection
 

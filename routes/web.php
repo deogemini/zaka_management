@@ -41,6 +41,7 @@ Route::middleware('auth')->group(function () {
     Route::get('reports/zaka', [App\Http\Controllers\ReportController::class, 'zaka'])->name('reports.zaka');
     Route::get('reports/jumuiya', [App\Http\Controllers\ReportController::class, 'jumuiya'])->name('reports.jumuiya');
     Route::get('reports/kanda', [App\Http\Controllers\ReportController::class, 'kanda'])->name('reports.kanda');
+    Route::resource('shukranis', App\Http\Controllers\ShukraniController::class);
 });
 
 require __DIR__.'/auth.php';

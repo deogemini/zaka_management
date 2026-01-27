@@ -41,6 +41,7 @@
                                 <td>{{ $mtoto->jumuiya?->jina_la_jumuiya }}</td>
                                 <td>
                                     <a href="{{ route('watotos.edit', $mtoto->id) }}" class="btn btn-sm btn-info">Hariri</a>
+                                    <a href="{{ route('shukranis.create', ['watoto_id' => $mtoto->id]) }}" class="btn btn-sm btn-primary">Ongeza Shukrani</a>
                                     <form action="{{ route('watotos.destroy', $mtoto->id) }}" method="POST" class="d-inline">
                                         @csrf
                                         @method('DELETE')

@@ -17,4 +17,9 @@ class Watoto extends Model
     {
         return $this->belongsTo(Jumuiya::class);
     }
+
+    public function shukranis()
+    {
+        return $this->hasMany(Shukrani::class, 'watoto_id');
+    }
 }

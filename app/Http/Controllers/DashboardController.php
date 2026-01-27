@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Zaka;
 use App\Models\Mwanajumuiya;
+use App\Models\Watoto;
 use Illuminate\Http\Request;
 
 class DashboardController extends Controller
@@ -68,6 +69,7 @@ class DashboardController extends Controller
 
         $wanajumuiya = Mwanajumuiya::with('jumuiya')->orderBy('jina_la_mwanajumuiya')->get();
         $totalWanajumuiya = Mwanajumuiya::count();
+        $totalWatoto = Watoto::count();
 
         return view('dashboard', compact(
             'labels',
@@ -78,6 +80,7 @@ class DashboardController extends Controller
             'year',
             'mwanaId',
             'totalWanajumuiya',
+            'totalWatoto',
             'jumuiyaLabels',
             'jumuiyaTotals',
             'kandaLabels',
