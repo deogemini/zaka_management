@@ -17,7 +17,7 @@
                         <select class="form-select @error('mwanajumuiya_id') is-invalid @enderror" name="mwanajumuiya_id">
                             <option selected disabled>Chagua Mwanajumuiya</option>
                             @foreach($wanajumuiya as $mwana)
-                                <option value="{{ $mwana->id }}" {{ old('mwanajumuiya_id') == $mwana->id ? 'selected' : '' }}>
+                                <option value="{{ $mwana->id }}" {{ old('mwanajumuiya_id', $preselectedId ?? null) == $mwana->id ? 'selected' : '' }}>
                                     {{ $mwana->jina_la_mwanajumuiya }} ({{ $mwana->jumuiya->jina_la_jumuiya }})
                                 </option>
                             @endforeach

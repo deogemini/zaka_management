@@ -18,8 +18,20 @@ class MwanajumuiyaController extends Controller
      */
     public function index()
     {
-        $wanajumuiya = Mwanajumuiya::with('jumuiya')->get();
-        return view('wanajumuiya.index', compact('wanajumuiya'));
+        $q = request('q');
+        $wanajumuiya = Mwanajumuiya::with('jumuiya')
+            ->when($q, function ($query) use ($q) {
+                $query->where(function ($q2) use ($q) {
+                    $q2->where('jina_la_mwanajumuiya', 'like', "%{$q}%")
+                        ->orWhere('kadi_namba', 'like', "%{$q}%")
+                        ->orWhere('namba_ya_simu', 'like', "%{$q}%")
+                        ->orWhereHas('jumuiya', function ($jq) use ($q) {
+                            $jq->where('jina_la_jumuiya', 'like', "%{$q}%");
+                        });
+                });
+            })
+            ->get();
+        return view('wanajumuiya.index', compact('wanajumuiya', 'q'));
     }
 
     public function importForm()

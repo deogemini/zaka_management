@@ -24,10 +24,11 @@ class ZakaController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function create(Request $request)
     {
         $wanajumuiya = Mwanajumuiya::with('jumuiya')->get();
-        return view('zakas.create', compact('wanajumuiya'));
+        $preselectedId = $request->query('mwanajumuiya_id');
+        return view('zakas.create', compact('wanajumuiya', 'preselectedId'));
     }
 
     public function importForm()

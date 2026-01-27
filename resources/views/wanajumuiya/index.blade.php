@@ -23,6 +23,15 @@
                 </div>
             </div>
             <div class="card-body">
+                <form method="GET" class="row g-2 mb-3">
+                    <div class="col-sm-8">
+                        <input type="text" name="q" value="{{ $q ?? '' }}" class="form-control" placeholder="Tafuta kwa jina, kadi namba, simu au jumuiya">
+                    </div>
+                    <div class="col-sm-4">
+                        <button class="btn btn-outline-primary">Tafuta</button>
+                        <a href="{{ route('mwanajumuiya.index') }}" class="btn btn-outline-secondary">Futa utafutaji</a>
+                    </div>
+                </form>
                 <table class="table table-hover my-0">
                     <thead>
                         <tr>
@@ -44,6 +53,7 @@
                                 <td>{{ $mwana->jumuiya->jina_la_jumuiya }}</td>
                                 <td>
                                     <a href="{{ route('mwanajumuiya.edit', $mwana->id) }}" class="btn btn-sm btn-info">Hariri</a>
+                                    <a href="{{ route('zakas.create', ['mwanajumuiya_id' => $mwana->id]) }}" class="btn btn-sm btn-primary">Ongeza Zaka</a>
                                     <form action="{{ route('mwanajumuiya.destroy', $mwana->id) }}" method="POST" class="d-inline">
                                         @csrf
                                         @method('DELETE')
