@@ -21,20 +21,20 @@ class MwanajumuiyaController extends Controller
         $wanajumuiya = Mwanajumuiya::with('jumuiya')->get();
         return view('wanajumuiya.index', compact('wanajumuiya'));
     }
-    
+
     public function importForm()
     {
         $jumuiyas = Jumuiya::orderBy('jina_la_jumuiya')->get();
         return view('wanajumuiya.import', compact('jumuiyas'));
     }
-    
+
     public function import(Request $request)
     {
         $request->validate([
             'file' => 'required|file|mimes:xlsx,xls,csv',
             'jumuiya_id' => 'nullable|exists:jumuiyas,id',
         ]);
-        
+
         $import = new MwanajumuiyasImport($request->jumuiya_id);
         Excel::import($import, $request->file('file'));
         $summary = $import->summary();
@@ -44,21 +44,21 @@ class MwanajumuiyaController extends Controller
             'skipped' => $summary['skipped'],
             'jumuiya_id' => $request->jumuiya_id,
         ]);
-        
+
         $message = "Import complete: {$summary['created']} created, {$summary['skipped']} skipped.";
         if (!empty($summary['errors'])) {
             $message .= " Errors: ".implode(' | ', array_slice($summary['errors'], 0, 5));
         }
-        
+
         return redirect()->route('mwanajumuiya.index')->with('success', $message);
     }
-    
+
     public function sample()
     {
         AuditService::log('mwanajumuiya.sample_download', null, ['template' => 'mwanajumuiya_template.xlsx']);
         return Excel::download(new MwanajumuiyaSampleTemplateExport(), 'mwanajumuiya_template.xlsx');
     }
-    
+
     public function export()
     {
         AuditService::log('mwanajumuiya.export', null, ['export' => 'wanajumuiya.xlsx']);
@@ -82,7 +82,7 @@ class MwanajumuiyaController extends Controller
         $request->validate([
             'jumuiya_id' => 'required|exists:jumuiyas,id',
             'jina_la_mwanajumuiya' => 'required|string|max:255',
-            'kadi_namba' => 'required|string|max:255|unique:mwanajumuiyas,kadi_namba',
+            'kadi_namba' => 'required|string|max:255',
             'namba_ya_simu' => 'required|string|max:20|unique:mwanajumuiyas,namba_ya_simu',
         ]);
 
@@ -118,7 +118,7 @@ class MwanajumuiyaController extends Controller
         $request->validate([
             'jumuiya_id' => 'required|exists:jumuiyas,id',
             'jina_la_mwanajumuiya' => 'required|string|max:255',
-            'kadi_namba' => 'required|string|max:255|unique:mwanajumuiyas,kadi_namba,' . $id,
+            'kadi_namba' => 'required|string|max:255',
             'namba_ya_simu' => 'required|string|max:20|unique:mwanajumuiyas,namba_ya_simu,' . $id,
         ]);
 

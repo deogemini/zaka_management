@@ -49,21 +49,19 @@ class MwanajumuiyasImport implements ToCollection, WithHeadingRow
                 $jumuiyaName = $this->getFirstValue($data, ['jumuiya', 'jina_la_jumuiya', 'community']);
 
                 if ($this->jumuiyaId) {
-                    if (!$name || !$kadi || !$simu) {
+                    if (!$name || !$simu) {
                         $this->skipped++;
                         $missing = [];
                         if (!$name) $missing[] = 'jina_la_mwanajumuiya';
-                        if (!$kadi) $missing[] = 'kadi_namba';
                         if (!$simu) $missing[] = 'namba_ya_simu';
                         $this->errors[] = "Row ".($index+2).": Missing required fields: ".implode(', ', $missing).".";
                         continue;
                     }
                 } else {
-                    if (!$name || !$kadi || !$simu || !$jumuiyaName) {
+                    if (!$name || !$simu || !$jumuiyaName) {
                         $this->skipped++;
                         $missing = [];
                         if (!$name) $missing[] = 'jina_la_mwanajumuiya';
-                        if (!$kadi) $missing[] = 'kadi_namba';
                         if (!$simu) $missing[] = 'namba_ya_simu';
                         if (!$jumuiyaName) $missing[] = 'jumuiya';
                         $this->errors[] = "Row ".($index+2).": Missing required fields: ".implode(', ', $missing).".";
@@ -71,10 +69,8 @@ class MwanajumuiyasImport implements ToCollection, WithHeadingRow
                     }
                 }
 
-                if (Mwanajumuiya::where('kadi_namba', $kadi)->exists()) {
-                    $this->skipped++;
-                    $this->errors[] = "Row ".($index+2).": Duplicate kadi_namba '{$kadi}'.";
-                    continue;
+                if (!$kadi || Mwanajumuiya::where('kadi_namba', $kadi)->exists()) {
+                    $kadi = '0';
                 }
 
                 if (Mwanajumuiya::where('namba_ya_simu', $simu)->exists()) {
