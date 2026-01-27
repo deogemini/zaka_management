@@ -17,13 +17,29 @@
                 <form action="{{ route('mwanajumuiya.import') }}" method="POST" enctype="multipart/form-data">
                     @csrf
                     <div class="mb-3">
+                        <label class="form-label">Weka Wanajumuiya katika Jumuiya hii (hiari)</label>
+                        <select name="jumuiya_id" class="form-select @error('jumuiya_id') is-invalid @enderror">
+                            <option value="">— Chagua —</option>
+                            @foreach($jumuiyas as $j)
+                                <option value="{{ $j->id }}" {{ old('jumuiya_id') == $j->id ? 'selected' : '' }}>{{ $j->jina_la_jumuiya }}</option>
+                            @endforeach
+                        </select>
+                        @error('jumuiya_id')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                        <div class="form-text">
+                            Ukichagua hapa, faili halihitaji kolamu ya <strong>jumuiya</strong>; wote watawekwa kwenye Jumuiya uliyochagua.
+                        </div>
+                    </div>
+                    <div class="mb-3">
                         <label class="form-label">Faili (.xlsx, .xls, .csv)</label>
                         <input type="file" class="form-control @error('file') is-invalid @enderror" name="file" accept=".xlsx,.xls,.csv">
                         @error('file')
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
                         <div class="form-text">
-                            Kolamu: jina_la_mwanajumuiya, kadi_namba, namba_ya_simu, jumuiya (jina kamili la jumuiya).
+                            Kolamu lazima: <strong>jina_la_mwanajumuiya</strong>, <strong>kadi_namba</strong>, <strong>namba_ya_simu</strong>. 
+                            Ukiacha kuchagua Jumuiya hapo juu, ongeza pia kolamu ya <strong>jumuiya</strong> (jina kamili la Jumuiya).
                         </div>
                     </div>
                     <button type="submit" class="btn btn-primary">Import</button>

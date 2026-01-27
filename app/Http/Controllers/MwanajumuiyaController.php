@@ -24,22 +24,25 @@ class MwanajumuiyaController extends Controller
     
     public function importForm()
     {
-        return view('wanajumuiya.import');
+        $jumuiyas = Jumuiya::orderBy('jina_la_jumuiya')->get();
+        return view('wanajumuiya.import', compact('jumuiyas'));
     }
     
     public function import(Request $request)
     {
         $request->validate([
             'file' => 'required|file|mimes:xlsx,xls,csv',
+            'jumuiya_id' => 'nullable|exists:jumuiyas,id',
         ]);
         
-        $import = new MwanajumuiyasImport();
+        $import = new MwanajumuiyasImport($request->jumuiya_id);
         Excel::import($import, $request->file('file'));
         $summary = $import->summary();
         AuditService::log('mwanajumuiya.import', null, [
             'file' => $request->file('file')->getClientOriginalName(),
             'created' => $summary['created'],
             'skipped' => $summary['skipped'],
+            'jumuiya_id' => $request->jumuiya_id,
         ]);
         
         $message = "Import complete: {$summary['created']} created, {$summary['skipped']} skipped.";
@@ -80,7 +83,7 @@ class MwanajumuiyaController extends Controller
             'jumuiya_id' => 'required|exists:jumuiyas,id',
             'jina_la_mwanajumuiya' => 'required|string|max:255',
             'kadi_namba' => 'required|string|max:255|unique:mwanajumuiyas,kadi_namba',
-            'namba_ya_simu' => 'required|string|max:20',
+            'namba_ya_simu' => 'required|string|max:20|unique:mwanajumuiyas,namba_ya_simu',
         ]);
 
         $mwanajumuiya = Mwanajumuiya::create($request->all());
@@ -116,7 +119,7 @@ class MwanajumuiyaController extends Controller
             'jumuiya_id' => 'required|exists:jumuiyas,id',
             'jina_la_mwanajumuiya' => 'required|string|max:255',
             'kadi_namba' => 'required|string|max:255|unique:mwanajumuiyas,kadi_namba,' . $id,
-            'namba_ya_simu' => 'required|string|max:20',
+            'namba_ya_simu' => 'required|string|max:20|unique:mwanajumuiyas,namba_ya_simu,' . $id,
         ]);
 
         $mwanajumuiya = Mwanajumuiya::findOrFail($id);
