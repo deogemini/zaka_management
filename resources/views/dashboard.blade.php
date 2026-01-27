@@ -130,12 +130,37 @@
         </div>
     </div>
 </div>
+    <div class="col-12 col-lg-6">
+        <div class="card flex-fill">
+            <div class="card-header">
+                <h5 class="card-title mb-0">Zaka kwa Jumuiya ({{ $year }})</h5>
+            </div>
+            <div class="card-body py-3">
+                <div class="chart chart-sm">
+                    <canvas id="chartjs-jumuiya-bar"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-12 col-lg-6">
+        <div class="card flex-fill">
+            <div class="card-header">
+                <h5 class="card-title mb-0">Zaka kwa Kanda ({{ $year }})</h5>
+            </div>
+            <div class="card-body py-3">
+                <div class="chart chart-sm">
+                    <canvas id="chartjs-kanda-bar"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
 
 @endsection
 
 @push('scripts')
 <script>
     document.addEventListener("DOMContentLoaded", function() {
+        var ctx = document.getElementById("chartjs-dashboard-line").getContext("2d");
         var ctx = document.getElementById("chartjs-dashboard-line").getContext("2d");
         var gradient = ctx.createLinearGradient(0, 0, 0, 225);
         gradient.addColorStop(0, "rgba(59, 125, 221, 0.15)"); // Primary color with opacity
@@ -189,6 +214,63 @@
                         }
                     }]
                 }
+            }
+        });
+    });
+</script>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        // Jumuiya bar
+        new Chart(document.getElementById("chartjs-jumuiya-bar"), {
+            type: "bar",
+            data: {
+                labels: @json($jumuiyaLabels),
+                datasets: [{
+                    label: "Zaka (TZS)",
+                    backgroundColor: "#3b7ddd",
+                    borderColor: "#3b7ddd",
+                    data: @json($jumuiyaTotals)
+                }]
+            },
+            options: {
+                maintainAspectRatio: false,
+                scales: {
+                    xAxes: [{
+                        gridLines: { color: "rgba(0,0,0,0.0)" }
+                    }],
+                    yAxes: [{
+                        gridLines: { color: "rgba(0,0,0,0.0)" },
+                        ticks: { beginAtZero: true }
+                    }]
+                },
+                legend: { display: false }
+            }
+        });
+
+        // Kanda bar
+        new Chart(document.getElementById("chartjs-kanda-bar"), {
+            type: "bar",
+            data: {
+                labels: @json($kandaLabels),
+                datasets: [{
+                    label: "Zaka (TZS)",
+                    backgroundColor: "#28a745",
+                    borderColor: "#28a745",
+                    data: @json($kandaTotals)
+                }]
+            },
+            options: {
+                maintainAspectRatio: false,
+                scales: {
+                    xAxes: [{
+                        gridLines: { color: "rgba(0,0,0,0.0)" }
+                    }],
+                    yAxes: [{
+                        gridLines: { color: "rgba(0,0,0,0.0)" },
+                        ticks: { beginAtZero: true }
+                    }]
+                },
+                legend: { display: false }
             }
         });
     });

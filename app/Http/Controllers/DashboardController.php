@@ -41,9 +41,47 @@ class DashboardController extends Controller
             ->limit(10)
             ->get();
 
+        $byJumuiya = Zaka::query()
+            ->whereYear('paid_at', $year)
+            ->join('mwanajumuiyas', 'zakas.mwanajumuiya_id', '=', 'mwanajumuiyas.id')
+            ->join('jumuiyas', 'mwanajumuiyas.jumuiya_id', '=', 'jumuiyas.id')
+            ->selectRaw('jumuiyas.jina_la_jumuiya as name, SUM(zakas.kiasi) as total')
+            ->groupBy('jumuiyas.jina_la_jumuiya')
+            ->orderByDesc('total')
+            ->limit(8)
+            ->get();
+        $jumuiyaLabels = $byJumuiya->pluck('name')->toArray();
+        $jumuiyaTotals = $byJumuiya->pluck('total')->map(fn($v) => (float) $v)->toArray();
+
+        $byKanda = Zaka::query()
+            ->whereYear('paid_at', $year)
+            ->join('mwanajumuiyas', 'zakas.mwanajumuiya_id', '=', 'mwanajumuiyas.id')
+            ->join('jumuiyas', 'mwanajumuiyas.jumuiya_id', '=', 'jumuiyas.id')
+            ->join('kandas', 'jumuiyas.kanda_id', '=', 'kandas.id')
+            ->selectRaw('kandas.jina_la_kanda as name, SUM(zakas.kiasi) as total')
+            ->groupBy('kandas.jina_la_kanda')
+            ->orderByDesc('total')
+            ->limit(8)
+            ->get();
+        $kandaLabels = $byKanda->pluck('name')->toArray();
+        $kandaTotals = $byKanda->pluck('total')->map(fn($v) => (float) $v)->toArray();
+
         $wanajumuiya = Mwanajumuiya::with('jumuiya')->orderBy('jina_la_mwanajumuiya')->get();
         $totalWanajumuiya = Mwanajumuiya::count();
 
-        return view('dashboard', compact('labels', 'amounts', 'counts', 'topMembers', 'wanajumuiya', 'year', 'mwanaId', 'totalWanajumuiya'));
+        return view('dashboard', compact(
+            'labels',
+            'amounts',
+            'counts',
+            'topMembers',
+            'wanajumuiya',
+            'year',
+            'mwanaId',
+            'totalWanajumuiya',
+            'jumuiyaLabels',
+            'jumuiyaTotals',
+            'kandaLabels',
+            'kandaTotals'
+        ));
     }
 }
