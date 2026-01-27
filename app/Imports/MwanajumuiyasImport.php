@@ -42,20 +42,19 @@ class MwanajumuiyasImport implements ToCollection, WithHeadingRow
                         continue;
                     }
                 }
+
+                if (Mwanajumuiya::where('kadi_namba', $kadi)->exists()) {
                     $this->skipped++;
-                    $this->errors[] = "Row ".($index+2).": Missing required fields.";
+                    $this->errors[] = "Row ".($index+2).": Duplicate kadi_namba '{$kadi}'.";
                     continue;
                 }
 
-                if (Mwanajumuiya::where('kadi_namba', $kadi)->exists()) {
-                
                 if (Mwanajumuiya::where('namba_ya_simu', $simu)->exists()) {
                     $this->skipped++;
                     $this->errors[] = "Row ".($index+2).": Duplicate namba_ya_simu '{$simu}'.";
                     continue;
                 }
-                    $this->skipped++;
-                $jumuiya = null;
+
                 if ($this->jumuiyaId) {
                     $jumuiya = Jumuiya::find($this->jumuiyaId);
                     if (!$jumuiya) {
@@ -71,10 +70,6 @@ class MwanajumuiyasImport implements ToCollection, WithHeadingRow
                         continue;
                     }
                 }
-                    $this->skipped++;
-                    $this->errors[] = "Row ".($index+2).": Jumuiya '{$jumuiyaName}' not found.";
-                    continue;
-                }
 
                 Mwanajumuiya::create([
                     'jumuiya_id' => $jumuiya->id,
@@ -86,6 +81,8 @@ class MwanajumuiyasImport implements ToCollection, WithHeadingRow
                 $this->created++;
             } catch (\Throwable $e) {
                 $this->skipped++;
+                $this->errors[] = "Row ".($index+2).": ".$e->getMessage();
+            }
         }
     }
 
