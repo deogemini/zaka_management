@@ -41,6 +41,14 @@
             @endif
         </div>
 
+        <div class="mb-3">
+            <label for="phone" class="form-label">{{ __('Phone') }}</label>
+            <input id="phone" name="phone" type="text" class="form-control @error('phone') is-invalid @enderror" value="{{ old('phone', $user->phone) }}" autocomplete="tel" placeholder="0712345678" />
+            @error('phone')
+                <div class="invalid-feedback">{{ $message }}</div>
+            @enderror
+        </div>
+
         <div class="d-flex align-items-center gap-3">
             <button type="submit" class="btn btn-primary">{{ __('Save') }}</button>
 
