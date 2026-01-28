@@ -33,6 +33,19 @@ class DashboardController extends Controller
             $counts[] = (int) ($rows[$i]->c ?? 0);
         }
 
+        // Watoto Shukrani Logic
+        $shukraniQuery = Shukrani::query()->whereYear('paid_at', $year);
+        $shukraniRows = $shukraniQuery->selectRaw('MONTH(paid_at) as m, SUM(kiasi) as s')
+            ->groupBy('m')
+            ->orderBy('m')
+            ->get()
+            ->keyBy('m');
+
+        $shukraniAmounts = [];
+        for ($i = 1; $i <= 12; $i++) {
+            $shukraniAmounts[] = (float) ($shukraniRows[$i]->s ?? 0);
+        }
+
         $topMembers = Zaka::query()
             ->whereYear('paid_at', $year)
             ->selectRaw('mwanajumuiya_id, SUM(kiasi) as total, MAX(paid_at) as last_paid')
