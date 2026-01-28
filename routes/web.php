@@ -31,6 +31,7 @@ Route::middleware('auth')->group(function () {
 
     Route::middleware(AdminMiddleware::class)->group(function () {
         Route::resource('users', UserController::class);
+        Route::get('audit-trails', [App\Http\Controllers\AuditTrailController::class, 'index'])->name('audit_trails.index');
     });
     Route::resource('watotos', App\Http\Controllers\WatotoController::class);
     Route::get('zakas/import', [ZakaController::class, 'importForm'])->name('zakas.import.form');

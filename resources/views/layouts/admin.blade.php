@@ -86,6 +86,11 @@
               <i class="align-middle" data-feather="shield"></i> <span class="align-middle">User Management</span>
             </a>
 					</li>
+                    <li class="sidebar-item {{ request()->routeIs('audit_trails.*') ? 'active' : '' }}">
+						<a class="sidebar-link" href="{{ route('audit_trails.index') }}">
+              <i class="align-middle" data-feather="activity"></i> <span class="align-middle">Audit Trails</span>
+            </a>
+					</li>
                     @endif
 
 					<li class="sidebar-item {{ request()->routeIs('profile.edit') ? 'active' : '' }}">

@@ -21,4 +21,9 @@ class AuditTrail extends Model
     protected $casts = [
         'changes' => 'array',
     ];
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }
