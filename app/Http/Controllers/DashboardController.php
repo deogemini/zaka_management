@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Zaka;
 use App\Models\Mwanajumuiya;
 use App\Models\Watoto;
+use App\Models\Shukrani;
 use Illuminate\Http\Request;
 
 class DashboardController extends Controller
