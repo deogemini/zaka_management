@@ -42,7 +42,7 @@
     <div class="card">
         <div class="card-body">
             <div class="table-responsive">
-                <table id="auditTable" class="table table-striped table-hover w-100">
+                <table id="auditTable" class="table table-sm table-striped table-hover w-100">
                     <thead>
                         <tr>
                             <th>User</th>
