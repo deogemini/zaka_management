@@ -1,5 +1,9 @@
 @extends('layouts.admin')
 
+@push('styles')
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css">
+@endpush
+
 @section('content')
 <h1 class="h3 mb-3"><strong>Zaka</strong> Management</h1>
 
@@ -22,7 +26,7 @@
                 </div>
             </div>
             <div class="card-body">
-                <table class="table table-hover my-0">
+                <table id="zakaTable" class="table table-hover my-0 w-100">
                     <thead>
                         <tr>
                             <th>#</th>
@@ -46,7 +50,7 @@
                                 <td>{{ $zaka->risiti_namba }}</td>
                                 <td>{{ $zaka->mode_ya_malipo }}</td>
                                 <td>{{ $zaka->hali_ya_malipo ?? '-' }}</td>
-                                <td>{{ optional($zaka->paid_at)->format('Y-m-d H:i') }}</td>
+                                <td data-sort="{{ optional($zaka->paid_at)->timestamp }}">{{ optional($zaka->paid_at)->format('Y-m-d H:i') }}</td>
                                 <td>
                                     <a href="{{ route('zakas.edit', $zaka->id) }}" class="btn btn-sm btn-info">Hariri</a>
                                     <form action="{{ route('zakas.destroy', $zaka->id) }}" method="POST" class="d-inline">
@@ -64,3 +68,32 @@
     </div>
 </div>
 @endsection
+
+@push('scripts')
+<script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
+<script>
+    $(document).ready(function() {
+        $('#zakaTable').DataTable({
+            "order": [[ 7, "desc" ]], // Sort by Muda wa Malipo (index 7) descending by default
+            "pageLength": 50,
+            "lengthMenu": [[10, 20, 50, 100, -1], [10, 20, 50, 100, "All"]],
+            "language": {
+                "search": "Tafuta:",
+                "lengthMenu": "Onyesha _MENU_ rekodi",
+                "info": "Inaonyesha _START_ hadi _END_ ya _TOTAL_ rekodi",
+                "paginate": {
+                    "first": "Kwanza",
+                    "last": "Mwisho",
+                    "next": "Ijayo",
+                    "previous": "Iliyopita"
+                },
+                "zeroRecords": "Hakuna rekodi zilizopatikana",
+                "infoEmpty": "Hakuna rekodi",
+                "infoFiltered": "(imuchujwa kutoka jumla ya rekodi _MAX_)"
+            }
+        });
+    });
+</script>
+@endpush
