@@ -1,5 +1,9 @@
 @extends('layouts.admin')
 
+@push('styles')
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css">
+@endpush
+
 @section('content')
 <h1 class="h3 mb-3"><strong>Watoto</strong> Management</h1>
 
@@ -20,7 +24,7 @@
                 </div>
             </div>
             <div class="card-body">
-                <table class="table table-hover my-0">
+                <table id="watotoTable" class="table table-hover my-0 w-100">
                     <thead>
                         <tr>
                             <th>#</th>
@@ -36,7 +40,7 @@
                             <tr>
                                 <td>{{ $loop->iteration }}</td>
                                 <td>{{ $mtoto->jina_la_mtoto }}</td>
-                                <td>{{ $mtoto->tarehe_ya_kuzaliwa ?? '-' }}</td>
+                                <td data-sort="{{ optional($mtoto->tarehe_ya_kuzaliwa)?->timestamp }}">{{ $mtoto->tarehe_ya_kuzaliwa ?? '-' }}</td>
                                 <td>{{ $mtoto->namba_ya_mzazi ?? '-' }}</td>
                                 <td>{{ $mtoto->jumuiya?->jina_la_jumuiya }}</td>
                                 <td>
@@ -57,3 +61,35 @@
     </div>
 </div>
 @endsection
+
+@push('scripts')
+<script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
+<script>
+    $(document).ready(function() {
+        $('#watotoTable').DataTable({
+            order: [[1, 'asc']], // sort by name
+            pageLength: 50,
+            lengthMenu: [[10, 20, 50, 100, -1], [10, 20, 50, 100, 'All']],
+            language: {
+                search: 'Tafuta:',
+                lengthMenu: 'Onyesha _MENU_ rekodi',
+                info: 'Inaonyesha _START_ hadi _END_ ya _TOTAL_ rekodi',
+                paginate: {
+                    first: 'Kwanza',
+                    last: 'Mwisho',
+                    next: 'Ijayo',
+                    previous: 'Iliyopita'
+                },
+                zeroRecords: 'Hakuna rekodi zilizopatikana',
+                infoEmpty: 'Hakuna rekodi',
+                infoFiltered: '(imuchujwa kutoka jumla ya rekodi _MAX_)'
+            },
+            columnDefs: [
+                { orderable: false, targets: [0, 5] }
+            ]
+        });
+    });
+</script>
+@endpush
