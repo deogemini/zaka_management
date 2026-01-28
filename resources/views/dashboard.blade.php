@@ -182,7 +182,6 @@
 <script>
     document.addEventListener("DOMContentLoaded", function() {
         var ctx = document.getElementById("chartjs-dashboard-line").getContext("2d");
-        var ctx = document.getElementById("chartjs-dashboard-line").getContext("2d");
         var gradient = ctx.createLinearGradient(0, 0, 0, 225);
         gradient.addColorStop(0, "rgba(59, 125, 221, 0.15)"); // Primary color with opacity
         gradient.addColorStop(1, "rgba(59, 125, 221, 0)");
