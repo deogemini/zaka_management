@@ -1,5 +1,9 @@
 @extends('layouts.admin')
 
+@push('styles')
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css">
+@endpush
+
 @section('content')
 <div class="container-fluid p-0">
     <h1 class="h3 mb-3">Audit Logs</h1>
@@ -7,7 +11,7 @@
     <div class="card">
         <div class="card-body">
             <div class="table-responsive">
-                <table class="table table-striped table-hover">
+                <table id="auditTable" class="table table-striped table-hover w-100">
                     <thead>
                         <tr>
                             <th>User</th>
@@ -27,7 +31,7 @@
                             <td>{{ class_basename($log->auditable_type) }}</td>
                             <td>{{ $log->auditable_id }}</td>
                             <td>{{ $log->ip_address }}</td>
-                            <td>{{ $log->created_at->format('Y-m-d H:i:s') }}</td>
+                            <td data-sort="{{ $log->created_at->timestamp }}">{{ $log->created_at->format('Y-m-d H:i:s') }}</td>
                             <td>
                                 <button type="button" class="btn btn-sm btn-info" data-bs-toggle="modal" data-bs-target="#logModal{{ $log->id }}">
                                     View
@@ -58,11 +62,33 @@
                     </tbody>
                 </table>
             </div>
-
-            <div class="mt-3">
-                {{ $logs->links() }}
-            </div>
         </div>
     </div>
 </div>
 @endsection
+
+@push('scripts')
+<script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
+<script>
+    $(document).ready(function() {
+        $('#auditTable').DataTable({
+            "order": [[ 5, "desc" ]], // Sort by Time column (index 5) descending
+            "pageLength": 20,
+            "lengthMenu": [[10, 20, 50, 100, -1], [10, 20, 50, 100, "All"]],
+            "language": {
+                "search": "Search logs:",
+                "lengthMenu": "Show _MENU_ entries",
+                "info": "Showing _START_ to _END_ of _TOTAL_ entries",
+                "paginate": {
+                    "first": "First",
+                    "last": "Last",
+                    "next": "Next",
+                    "previous": "Previous"
+                }
+            }
+        });
+    });
+</script>
+@endpush

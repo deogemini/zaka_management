@@ -9,7 +9,7 @@ class AuditTrailController extends Controller
 {
     public function index()
     {
-        $logs = AuditTrail::with('user')->latest()->paginate(20);
+        $logs = AuditTrail::with('user')->latest()->limit(2000)->get();
         return view('audit_trails.index', compact('logs'));
     }
 }
