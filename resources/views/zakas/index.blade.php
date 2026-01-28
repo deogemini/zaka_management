@@ -2,6 +2,38 @@
 
 @push('styles')
 <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css">
+<style>
+    /* Custom styles to fix pagination if Bootstrap 5 integration is partial */
+    .dataTables_wrapper .dataTables_paginate .pagination {
+        display: flex;
+        justify-content: flex-end;
+        padding-left: 0;
+        list-style: none;
+        margin-top: 1rem;
+    }
+    .dataTables_wrapper .dataTables_paginate .page-item {
+        margin: 0 2px;
+    }
+    .dataTables_wrapper .dataTables_paginate .page-link {
+        border-radius: 4px;
+        padding: 6px 12px;
+        border: 1px solid #dee2e6;
+        color: #3b7ddd;
+        text-decoration: none;
+        background-color: #fff;
+    }
+    .dataTables_wrapper .dataTables_paginate .page-item.active .page-link {
+        background-color: #3b7ddd;
+        border-color: #3b7ddd;
+        color: white;
+    }
+    .dataTables_wrapper .dataTables_paginate .page-item.disabled .page-link {
+        color: #6c757d;
+        pointer-events: none;
+        background-color: #fff;
+        border-color: #dee2e6;
+    }
+</style>
 @endpush
 
 @section('content')
