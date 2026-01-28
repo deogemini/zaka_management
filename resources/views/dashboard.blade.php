@@ -176,6 +176,21 @@
     </div>
 </div>
 
+<div class="row mt-3">
+    <div class="col-xl-6 col-xxl-7 ms-auto">
+        <div class="card flex-fill w-100">
+            <div class="card-header">
+                <h5 class="card-title mb-0">Watoto Shukrani Trend ({{ $year }})</h5>
+            </div>
+            <div class="card-body py-3">
+                <div class="chart chart-sm">
+                    <canvas id="chartjs-shukrani-line"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 @endsection
 
 @push('scripts')
