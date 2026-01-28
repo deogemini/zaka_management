@@ -67,26 +67,6 @@
                                 <button type="button" class="btn btn-sm btn-info" data-bs-toggle="modal" data-bs-target="#logModal{{ $log->id }}">
                                     View
                                 </button>
-
-                                <!-- Modal -->
-                                <div class="modal fade" id="logModal{{ $log->id }}" tabindex="-1" aria-hidden="true">
-                                    <div class="modal-dialog modal-lg">
-                                        <div class="modal-content">
-                                            <div class="modal-header">
-                                                <h5 class="modal-title">Log Details #{{ $log->id }}</h5>
-                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                            </div>
-                                            <div class="modal-body">
-                                                <p><strong>User Agent:</strong> {{ $log->user_agent }}</p>
-                                                <p><strong>Route:</strong> {{ $log->route }}</p>
-                                                <p><strong>Method:</strong> {{ $log->method }}</p>
-                                                <hr>
-                                                <h6>Changes:</h6>
-                                                <pre>{{ json_encode($log->changes, JSON_PRETTY_PRINT) }}</pre>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
                             </td>
                         </tr>
                         @endforeach
@@ -96,6 +76,28 @@
         </div>
     </div>
 </div>
+
+<!-- Modals outside the table -->
+@foreach($logs as $log)
+<div class="modal fade" id="logModal{{ $log->id }}" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Log Details #{{ $log->id }}</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p><strong>User Agent:</strong> {{ $log->user_agent }}</p>
+                <p><strong>Route:</strong> {{ $log->route }}</p>
+                <p><strong>Method:</strong> {{ $log->method }}</p>
+                <hr>
+                <h6>Changes:</h6>
+                <pre>{{ json_encode($log->changes, JSON_PRETTY_PRINT) }}</pre>
+            </div>
+        </div>
+    </div>
+</div>
+@endforeach
 @endsection
 
 @push('scripts')
