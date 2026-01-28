@@ -37,6 +37,7 @@
                                 <td><span class="badge bg-primary">{{ $jumuiya->wanajumuiya_count }}</span></td>
                                 <td>
                                     <a href="{{ route('jumuiyas.edit', $jumuiya->id) }}" class="btn btn-sm btn-info">Hariri</a>
+                                    <a href="{{ route('mwanajumuiya.create', ['jumuiya_id' => $jumuiya->id]) }}" class="btn btn-sm btn-primary">Ongeza Mwanajumuiya</a>
                                     <form action="{{ route('jumuiyas.destroy', $jumuiya->id) }}" method="POST" class="d-inline">
                                         @csrf
                                         @method('DELETE')
