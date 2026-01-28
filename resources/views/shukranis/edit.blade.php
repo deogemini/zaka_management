@@ -28,7 +28,7 @@
                     </div>
                     <div class="mb-3">
                         <label class="form-label">Kiasi</label>
-                        <input type="number" step="0.01" class="form-control @error('kiasi') is-invalid @enderror" name="kiasi" value="{{ old('kiasi', $shukrani->kiasi) }}">
+                        <input type="text" id="kiasiInput" class="form-control @error('kiasi') is-invalid @enderror" name="kiasi" value="{{ old('kiasi', $shukrani->kiasi) }}">
                         @error('kiasi')
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
@@ -72,3 +72,38 @@
     </div>
 </div>
 @endsection
+
+@push('scripts')
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const kiasiInput = document.getElementById('kiasiInput');
+        if (kiasiInput) {
+            const form = kiasiInput.closest('form');
+
+            // Format initial value
+            if (kiasiInput.value) {
+                formatInput(kiasiInput);
+            }
+
+            kiasiInput.addEventListener('input', function() {
+                formatInput(this);
+            });
+
+            form.addEventListener('submit', function() {
+                kiasiInput.value = kiasiInput.value.replace(/,/g, '');
+            });
+
+            function formatInput(input) {
+                let value = input.value.replace(/,/g, '');
+                let parts = value.split('.');
+                parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+                if (parts.length > 1) {
+                    input.value = parts[0] + '.' + parts[1];
+                } else {
+                    input.value = parts[0];
+                }
+            }
+        }
+    });
+</script>
+@endpush

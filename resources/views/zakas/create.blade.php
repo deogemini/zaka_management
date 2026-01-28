@@ -97,6 +97,38 @@
 </div>
 @push('scripts')
 <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const kiasiInput = document.getElementById('kiasiInput');
+        if (kiasiInput) {
+            const form = kiasiInput.closest('form');
+
+            // Format initial value
+            if (kiasiInput.value) {
+                formatInput(kiasiInput);
+            }
+
+            kiasiInput.addEventListener('input', function() {
+                formatInput(this);
+            });
+
+            form.addEventListener('submit', function() {
+                kiasiInput.value = kiasiInput.value.replace(/,/g, '');
+            });
+
+            function formatInput(input) {
+                let value = input.value.replace(/,/g, '');
+                let parts = value.split('.');
+                parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+                if (parts.length > 1) {
+                    input.value = parts[0] + '.' + parts[1];
+                } else {
+                    input.value = parts[0];
+                }
+            }
+        }
+    });
+</script>
+<script>
     (function(){
         var members = @json($memberData);
         var jumuiyaSelect = document.getElementById('jumuiya-filter');
