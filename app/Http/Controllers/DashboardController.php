@@ -84,7 +84,8 @@ class DashboardController extends Controller
             'jumuiyaLabels',
             'jumuiyaTotals',
             'kandaLabels',
-            'kandaTotals'
+            'kandaTotals',
+            'shukraniAmounts'
         ));
     }
 }

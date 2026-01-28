@@ -198,7 +198,61 @@
                     backgroundColor: gradient,
                     borderColor: "#3b7ddd", // window.theme.primary default
                     data: @json($amounts),
-                    tension: 0.4
+                }]
+            },
+            options: {
+                maintainAspectRatio: false,
+                legend: {
+                    display: false
+                },
+                tooltips: {
+                    intersect: false
+                },
+                hover: {
+                    intersect: true
+                },
+                plugins: {
+                    filler: {
+                        propagate: false
+                    }
+                },
+                scales: {
+                    xAxes: [{
+                        reverse: true,
+                        gridLines: {
+                            color: "rgba(0,0,0,0.0)"
+                        }
+                    }],
+                    yAxes: [{
+                        ticks: {
+                            stepSize: 1000
+                        },
+                        display: true,
+                        borderDash: [3, 3],
+                        gridLines: {
+                            color: "rgba(0,0,0,0.0)"
+                        }
+                    }]
+                }
+            }
+        });
+
+        // Watoto Shukrani Line chart
+        var ctx2 = document.getElementById("chartjs-shukrani-line").getContext("2d");
+        var gradient2 = ctx2.createLinearGradient(0, 0, 0, 225);
+        gradient2.addColorStop(0, "rgba(28, 187, 140, 0.15)"); // Success color with opacity
+        gradient2.addColorStop(1, "rgba(28, 187, 140, 0)");
+
+        new Chart(document.getElementById("chartjs-shukrani-line"), {
+            type: "line",
+            data: {
+                labels: @json($labels),
+                datasets: [{
+                    label: "Shukrani (TZS)",
+                    fill: true,
+                    backgroundColor: gradient2,
+                    borderColor: "#1cbb8c", // success color
+                    data: @json($shukraniAmounts),
                 }]
             },
             options: {
