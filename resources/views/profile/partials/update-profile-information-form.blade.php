@@ -3,7 +3,7 @@
         @csrf
     </form>
 
-    <form method="post" action="{{ route('profile.update') }}">
+    <form method="post" action="{{ route('profile.update') }}" enctype="multipart/form-data">
         @csrf
         @method('patch')
 
@@ -46,6 +46,17 @@
             <input id="phone" name="phone" type="text" class="form-control @error('phone') is-invalid @enderror" value="{{ old('phone', $user->phone) }}" autocomplete="tel" placeholder="0712345678" />
             @error('phone')
                 <div class="invalid-feedback">{{ $message }}</div>
+            @enderror
+        </div>
+
+        <div class="mb-3">
+            <label for="avatar" class="form-label">{{ __('Profile Picture') }}</label>
+            <div class="d-flex align-items-center gap-3">
+                <img src="{{ $user->avatar ? asset($user->avatar) : asset('adminkit/img/avatars/avatar.jpg') }}" alt="avatar" class="rounded" style="width: 56px; height: 56px; object-fit: cover;">
+                <input id="avatar" name="avatar" type="file" class="form-control @error('avatar') is-invalid @enderror" accept="image/*">
+            </div>
+            @error('avatar')
+                <div class="invalid-feedback d-block">{{ $message }}</div>
             @enderror
         </div>
 

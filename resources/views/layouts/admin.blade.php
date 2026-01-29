@@ -127,7 +127,7 @@
               </a>
 
 							<a class="nav-link dropdown-toggle d-none d-sm-inline-block" href="#" data-bs-toggle="dropdown">
-                <img src="{{ asset('adminkit/img/avatars/avatar.jpg') }}" class="avatar img-fluid rounded me-1" alt="Charles Hall" /> <span class="text-dark">{{ Auth::user()->name ?? 'Guest' }}</span>
+                <img src="{{ Auth::user()?->avatar ? asset(Auth::user()->avatar) : asset('adminkit/img/avatars/avatar.jpg') }}" class="avatar img-fluid rounded me-1" alt="User Avatar" /> <span class="text-dark">{{ Auth::user()->name ?? 'Guest' }}</span>
               </a>
 							<div class="dropdown-menu dropdown-menu-end">
 								<a class="dropdown-item" href="{{ route('profile.edit') }}"><i class="align-middle me-1" data-feather="user"></i> Profile</a>
