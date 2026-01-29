@@ -6,6 +6,7 @@ use App\Http\Requests\ProfileUpdateRequest;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\View\View;
 
@@ -29,13 +30,14 @@ class ProfileController extends Controller
         $data = $request->validated();
         if ($request->hasFile('avatar')) {
             $file = $request->file('avatar');
-            $name = uniqid('avatar_') . '.' . $file->getClientOriginalExtension();
-            $dest = public_path('uploads/avatars');
-            if (!is_dir($dest)) {
-                @mkdir($dest, 0755, true);
+            if ($file && $file->isValid()) {
+                $path = $file->store('avatars', 'public');
+                $data['avatar'] = 'storage/' . $path;
+            } else {
+                return Redirect::route('profile.edit')->withErrors([
+                    'avatar' => 'Faili ya picha si halali au haipo.'
+                ])->withInput();
             }
-            $file->move($dest, $name);
-            $data['avatar'] = 'uploads/avatars/' . $name;
         }
         $request->user()->fill($data);
 
