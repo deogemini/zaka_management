@@ -19,7 +19,8 @@ class JumuiyaController extends Controller
             $query->where('kanda_id', request('kanda_id'));
         }
         $jumuiyas = $query->get();
-        return view('jumuiyas.index', compact('jumuiyas'));
+        $kandas = Kanda::orderBy('jina_la_kanda')->get();
+        return view('jumuiyas.index', compact('jumuiyas', 'kandas'));
     }
 
     /**

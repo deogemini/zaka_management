@@ -53,6 +53,25 @@
                 <a href="{{ route('jumuiyas.create') }}" class="btn btn-primary float-end mt-n4">Ongeza Jumuiya</a>
             </div>
             <div class="card-body">
+                <div class="row mb-3">
+                    <div class="col-md-8">
+                        <form method="GET" action="{{ route('jumuiyas.index') }}" id="kandaFilterForm" class="d-flex align-items-center gap-2">
+                            <label for="kanda_id" class="mb-0">Chuja kwa Kanda:</label>
+                            <select name="kanda_id" id="kanda_id" class="form-select" style="max-width: 260px;">
+                                <option value="">Zote</option>
+                                @foreach($kandas as $kanda)
+                                    <option value="{{ $kanda->id }}" {{ request('kanda_id') == $kanda->id ? 'selected' : '' }}>
+                                        {{ $kanda->jina_la_kanda }}
+                                    </option>
+                                @endforeach
+                            </select>
+                            <button type="submit" class="btn btn-outline-secondary">Chuja</button>
+                            @if(request()->filled('kanda_id'))
+                                <a href="{{ route('jumuiyas.index') }}" class="btn btn-outline-secondary">Ondoa</a>
+                            @endif
+                        </form>
+                    </div>
+                </div>
                 <table id="jumuiyaTable" class="table table-hover my-0 w-100">
                     <thead>
                         <tr>
@@ -116,6 +135,9 @@
             columnDefs: [
                 { orderable: false, targets: [0, 4] }
             ]
+        });
+        $('#kanda_id').on('change', function() {
+            $('#kandaFilterForm').submit();
         });
     });
 </script>
