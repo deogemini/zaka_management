@@ -40,9 +40,13 @@ Route::middleware('auth')->group(function () {
     Route::resource('zakas', ZakaController::class)->where(['zaka' => '[0-9]+']);
 
     Route::get('reports/zaka', [App\Http\Controllers\ReportController::class, 'zaka'])->name('reports.zaka');
+    Route::get('reports/zaka/export', [App\Http\Controllers\ReportController::class, 'zakaExport'])->name('reports.zaka.export');
     Route::get('reports/jumuiya', [App\Http\Controllers\ReportController::class, 'jumuiya'])->name('reports.jumuiya');
+    Route::get('reports/jumuiya/export', [App\Http\Controllers\ReportController::class, 'jumuiyaExport'])->name('reports.jumuiya.export');
     Route::get('reports/kanda', [App\Http\Controllers\ReportController::class, 'kanda'])->name('reports.kanda');
+    Route::get('reports/kanda/export', [App\Http\Controllers\ReportController::class, 'kandaExport'])->name('reports.kanda.export');
     Route::get('reports/mwanajumuiya', [App\Http\Controllers\ReportController::class, 'mwanajumuiya'])->name('reports.mwanajumuiya');
+    Route::get('reports/mwanajumuiya/export', [App\Http\Controllers\ReportController::class, 'mwanajumuiyaExport'])->name('reports.mwanajumuiya.export');
     Route::resource('shukranis', App\Http\Controllers\ShukraniController::class);
 });
 

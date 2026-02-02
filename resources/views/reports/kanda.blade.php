@@ -52,7 +52,13 @@
         <div class="card">
             <div class="card-header d-flex justify-content-between">
                 <h5 class="card-title mb-0">Zaka by Kanda</h5>
-                <h5 class="card-title mb-0 text-primary">Total: {{ number_format($total) }} TZS</h5>
+                <div class="d-flex align-items-center gap-2">
+                    <h5 class="card-title mb-0 text-primary">Total: {{ number_format($total) }} TZS</h5>
+                    <a class="btn btn-outline-success btn-sm"
+                       href="{{ route('reports.kanda.export', ['year' => $year, 'month' => $month, 'start_date' => $startDate, 'end_date' => $endDate]) }}">
+                        Export Excel
+                    </a>
+                </div>
             </div>
             <div class="card-body">
                 <table class="table table-hover my-0">

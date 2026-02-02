@@ -6,6 +6,11 @@ use App\Models\Zaka;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\ReportZakaExport;
+use App\Exports\ReportJumuiyaExport;
+use App\Exports\ReportKandaExport;
+use App\Exports\ReportMwanajumuiyaExport;
 
 class ReportController extends Controller
 {
@@ -132,5 +137,44 @@ class ReportController extends Controller
         $total = $data->sum('total');
 
         return view('reports.kanda', compact('data', 'total', 'year', 'month', 'startDate', 'endDate'));
+    }
+
+    public function zakaExport(Request $request)
+    {
+        return Excel::download(new ReportZakaExport(
+            $request->input('year'),
+            $request->input('month'),
+            $request->input('start_date'),
+            $request->input('end_date')
+        ), 'zaka_report.xlsx');
+    }
+
+    public function jumuiyaExport(Request $request)
+    {
+        return Excel::download(new ReportJumuiyaExport(
+            $request->input('year'),
+            $request->input('month'),
+            $request->input('start_date'),
+            $request->input('end_date')
+        ), 'jumuiya_report.xlsx');
+    }
+
+    public function kandaExport(Request $request)
+    {
+        return Excel::download(new ReportKandaExport(
+            $request->input('year'),
+            $request->input('month'),
+            $request->input('start_date'),
+            $request->input('end_date')
+        ), 'kanda_report.xlsx');
+    }
+
+    public function mwanajumuiyaExport(Request $request)
+    {
+        return Excel::download(new ReportMwanajumuiyaExport(
+            $request->input('mwanajumuiya_id'),
+            $request->input('start_date'),
+            $request->input('end_date')
+        ), 'mwanajumuiya_report.xlsx');
     }
 }
