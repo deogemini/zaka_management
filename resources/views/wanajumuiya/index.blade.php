@@ -58,6 +58,25 @@
                 </div>
             </div>
             <div class="card-body">
+                <div class="row mb-3">
+                    <div class="col-md-8">
+                        <form method="GET" action="{{ route('mwanajumuiya.index') }}" id="jumuiyaFilterForm" class="d-flex align-items-center gap-2">
+                            <label for="jumuiya_id" class="mb-0">Chuja kwa Jumuiya:</label>
+                            <select name="jumuiya_id" id="jumuiya_id" class="form-select" style="max-width: 260px;">
+                                <option value="">Zote</option>
+                                @foreach($jumuiyas as $jumuiya)
+                                    <option value="{{ $jumuiya->id }}" {{ request('jumuiya_id') == $jumuiya->id ? 'selected' : '' }}>
+                                        {{ $jumuiya->jina_la_jumuiya }}
+                                    </option>
+                                @endforeach
+                            </select>
+                            <button type="submit" class="btn btn-outline-secondary">Chuja</button>
+                            @if(request()->filled('jumuiya_id'))
+                                <a href="{{ route('mwanajumuiya.index') }}" class="btn btn-outline-secondary">Ondoa</a>
+                            @endif
+                        </form>
+                    </div>
+                </div>
                 <table id="mwanajumuiyaTable" class="table table-hover my-0 w-100">
                     <thead>
                         <tr>
@@ -120,6 +139,9 @@
                 "infoEmpty": "Hakuna rekodi",
                 "infoFiltered": "(imuchujwa kutoka jumla ya rekodi _MAX_)"
             }
+        });
+        $('#jumuiya_id').on('change', function() {
+            $('#jumuiyaFilterForm').submit();
         });
     });
 </script>

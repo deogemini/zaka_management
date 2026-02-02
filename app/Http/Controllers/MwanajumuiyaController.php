@@ -19,7 +19,11 @@ class MwanajumuiyaController extends Controller
     public function index()
     {
         $q = request('q');
+        $jumuiyaId = request('jumuiya_id');
         $wanajumuiya = Mwanajumuiya::with('jumuiya')
+            ->when($jumuiyaId, function ($query) use ($jumuiyaId) {
+                $query->where('jumuiya_id', $jumuiyaId);
+            })
             ->when($q, function ($query) use ($q) {
                 $query->where(function ($q2) use ($q) {
                     $q2->where('jina_la_mwanajumuiya', 'like', "%{$q}%")
@@ -31,7 +35,8 @@ class MwanajumuiyaController extends Controller
                 });
             })
             ->get();
-        return view('wanajumuiya.index', compact('wanajumuiya', 'q'));
+        $jumuiyas = Jumuiya::orderBy('jina_la_jumuiya')->get();
+        return view('wanajumuiya.index', compact('wanajumuiya', 'q', 'jumuiyas'));
     }
 
     public function importForm()
