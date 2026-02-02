@@ -9,6 +9,42 @@ use Illuminate\Support\Facades\DB;
 
 class ReportController extends Controller
 {
+    public function mwanajumuiya(Request $request)
+    {
+        $mwanajumuiyaId = $request->input('mwanajumuiya_id');
+        $startDate = $request->input('start_date');
+        $endDate = $request->input('end_date');
+
+        $members = \App\Models\Mwanajumuiya::with('jumuiya')
+            ->orderBy('jina_la_mwanajumuiya')
+            ->get();
+
+        $zakas = collect();
+        $total = 0;
+
+        if ($mwanajumuiyaId) {
+            $query = Zaka::with('mwanajumuiya.jumuiya')
+                ->where('mwanajumuiya_id', $mwanajumuiyaId);
+
+            if ($startDate && $endDate) {
+                $start = Carbon::parse($startDate)->startOfDay();
+                $end = Carbon::parse($endDate)->endOfDay();
+                $query->whereBetween('paid_at', [$start, $end]);
+            }
+
+            $zakas = $query->orderBy('paid_at', 'desc')->get();
+            $total = $zakas->sum('kiasi');
+        }
+
+        return view('reports.mwanajumuiya', compact(
+            'members',
+            'zakas',
+            'total',
+            'mwanajumuiyaId',
+            'startDate',
+            'endDate'
+        ));
+    }
     public function zaka(Request $request)
     {
         $year = $request->input('year', date('Y'));

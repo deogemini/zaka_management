@@ -78,6 +78,7 @@
                             <li class="sidebar-item {{ request()->routeIs('reports.zaka') ? 'active' : '' }}"><a class="sidebar-link" href="{{ route('reports.zaka') }}">Zaka Report</a></li>
                             <li class="sidebar-item {{ request()->routeIs('reports.jumuiya') ? 'active' : '' }}"><a class="sidebar-link" href="{{ route('reports.jumuiya') }}">Jumuiya Report</a></li>
                             <li class="sidebar-item {{ request()->routeIs('reports.kanda') ? 'active' : '' }}"><a class="sidebar-link" href="{{ route('reports.kanda') }}">Kanda Report</a></li>
+                            <li class="sidebar-item {{ request()->routeIs('reports.mwanajumuiya') ? 'active' : '' }}"><a class="sidebar-link" href="{{ route('reports.mwanajumuiya') }}">Mwanajumuiya Report</a></li>
                         </ul>
 					</li>
 
