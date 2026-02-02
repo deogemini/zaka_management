@@ -2,6 +2,7 @@
 
 @push('styles')
 <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.14.0-beta3/dist/css/bootstrap-select.min.css">
 <style>
     .dataTables_wrapper .dataTables_paginate .pagination {
         display: flex;
@@ -62,7 +63,7 @@
                     <div class="col-md-8">
                         <form method="GET" action="{{ route('mwanajumuiya.index') }}" id="jumuiyaFilterForm" class="d-flex align-items-center gap-2">
                             <label for="jumuiya_id" class="mb-0">Chuja kwa Jumuiya:</label>
-                            <select name="jumuiya_id" id="jumuiya_id" class="form-select" style="max-width: 260px;">
+                            <select name="jumuiya_id" id="jumuiya_id" class="selectpicker" data-live-search="true" data-width="260px">
                                 <option value="">Zote</option>
                                 @foreach($jumuiyas as $jumuiya)
                                     <option value="{{ $jumuiya->id }}" {{ request('jumuiya_id') == $jumuiya->id ? 'selected' : '' }}>
@@ -119,6 +120,7 @@
 <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
 <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
 <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.14.0-beta3/dist/js/bootstrap-select.min.js"></script>
 <script>
     $(document).ready(function() {
         $('#mwanajumuiyaTable').DataTable({
@@ -140,7 +142,8 @@
                 "infoFiltered": "(imuchujwa kutoka jumla ya rekodi _MAX_)"
             }
         });
-        $('#jumuiya_id').on('change', function() {
+        $('.selectpicker').selectpicker();
+        $('#jumuiya_id').on('changed.bs.select', function() {
             $('#jumuiyaFilterForm').submit();
         });
     });
