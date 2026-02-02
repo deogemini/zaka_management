@@ -10,10 +10,10 @@
                 <h5 class="card-title mb-0">Filter Report</h5>
             </div>
             <div class="card-body">
-                <form method="GET" action="{{ route('reports.mwanajumuiya') }}" class="row g-3">
+                <form method="GET" action="{{ route('reports.mwanajumuiya') }}" class="row g-3" id="mwanajumuiyaFilterForm">
                     <div class="col-md-4">
                         <label for="mwanajumuiya_id" class="form-label">Mwanajumuiya</label>
-                        <select id="mwanajumuiya_id" name="mwanajumuiya_id" class="form-select">
+                        <select id="mwanajumuiya_id" name="mwanajumuiya_id" class="selectpicker" data-live-search="true" data-width="100%">
                             <option value="">Chagua Mwanajumuiya</option>
                             @foreach($members as $m)
                                 <option value="{{ $m->id }}" {{ ($mwanajumuiyaId ?? null) == $m->id ? 'selected' : '' }}>
@@ -87,3 +87,18 @@
     </div>
 </div>
 @endsection
+@push('styles')
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.14.0-beta3/dist/css/bootstrap-select.min.css">
+@endpush
+@push('scripts')
+<script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.14.0-beta3/dist/js/bootstrap-select.min.js"></script>
+<script>
+    $(function() {
+        $('.selectpicker').selectpicker();
+        $('#mwanajumuiya_id').on('changed.bs.select', function() {
+            $('#mwanajumuiyaFilterForm').submit();
+        });
+    });
+</script>
+@endpush
