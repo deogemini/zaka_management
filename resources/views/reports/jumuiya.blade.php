@@ -11,7 +11,7 @@
             </div>
             <div class="card-body">
                 <form method="GET" action="{{ route('reports.jumuiya') }}" class="row g-3">
-                    <div class="col-md-4">
+                    <div class="col-md-3">
                         <label for="year" class="form-label">Year</label>
                         <select id="year" name="year" class="form-select">
                             @for($y = date('Y'); $y >= 2020; $y--)
@@ -19,7 +19,7 @@
                             @endfor
                         </select>
                     </div>
-                    <div class="col-md-4">
+                    <div class="col-md-3">
                         <label for="month" class="form-label">Month</label>
                         <select id="month" name="month" class="form-select">
                             <option value="">All Months</option>
@@ -30,7 +30,15 @@
                             @endforeach
                         </select>
                     </div>
-                    <div class="col-md-4 d-flex align-items-end">
+                    <div class="col-md-3">
+                        <label for="start_date" class="form-label">Start Date</label>
+                        <input type="date" id="start_date" name="start_date" class="form-control" value="{{ $startDate ?? '' }}">
+                    </div>
+                    <div class="col-md-3">
+                        <label for="end_date" class="form-label">End Date</label>
+                        <input type="date" id="end_date" name="end_date" class="form-control" value="{{ $endDate ?? '' }}">
+                    </div>
+                    <div class="col-md-12 d-flex align-items-end">
                         <button type="submit" class="btn btn-primary w-100">Filter</button>
                     </div>
                 </form>
