@@ -14,7 +14,7 @@
                     @csrf
                     <div class="mb-3">
                         <label class="form-label">Chagua Jumuiya</label>
-                        <select id="jumuiya-filter" class="form-select">
+                        <select id="jumuiya-filter" class="selectpicker" data-live-search="true" data-width="100%">
                             <option value="">-- Chagua Jumuiya --</option>
                             @foreach(($jumuiyas ?? []) as $j)
                                 <option value="{{ $j->id }}" {{ (string)($preselectedJumuiyaId ?? '') === (string)$j->id ? 'selected' : '' }}>
@@ -95,7 +95,13 @@
         </div>
     </div>
 </div>
+@push('styles')
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.14.0-beta3/dist/css/bootstrap-select.min.css">
+@endpush
 @push('scripts')
+<script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.14.0-beta3/dist/js/bootstrap-select.min.js"></script>
+<script>$(function(){ $('.selectpicker').selectpicker(); });</script>
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         const kiasiInput = document.getElementById('kiasiInput');
