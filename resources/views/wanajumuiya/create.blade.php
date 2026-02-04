@@ -14,7 +14,7 @@
                     @csrf
                     <div class="mb-3">
                         <label class="form-label">Jumuiya</label>
-                        <select class="form-select @error('jumuiya_id') is-invalid @enderror" name="jumuiya_id">
+                        <select class="selectpicker @error('jumuiya_id') is-invalid @enderror" name="jumuiya_id" data-live-search="true" data-width="100%">
                             <option selected disabled>Chagua Jumuiya</option>
                             @foreach($jumuiyas as $jumuiya)
                                 <option value="{{ $jumuiya->id }}" {{ old('jumuiya_id', request('jumuiya_id')) == $jumuiya->id ? 'selected' : '' }}>{{ $jumuiya->jina_la_jumuiya }}</option>
@@ -53,3 +53,15 @@
     </div>
 </div>
 @endsection
+@push('styles')
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.14.0-beta3/dist/css/bootstrap-select.min.css">
+@endpush
+@push('scripts')
+<script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.14.0-beta3/dist/js/bootstrap-select.min.js"></script>
+<script>
+    $(function() {
+        $('.selectpicker').selectpicker();
+    });
+</script>
+@endpush
