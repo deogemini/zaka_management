@@ -43,7 +43,7 @@
                     </div>
                     <div class="mb-3">
                         <label class="form-label">Kiasi</label>
-                        <input type="number" step="0.01" class="form-control @error('kiasi') is-invalid @enderror" name="kiasi" placeholder="Ingiza kiasi" value="{{ old('kiasi') }}">
+                        <input type="text" id="kiasiInput" inputmode="decimal" class="form-control @error('kiasi') is-invalid @enderror" name="kiasi" placeholder="Ingiza kiasi" value="{{ old('kiasi') }}">
                         @error('kiasi')
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
