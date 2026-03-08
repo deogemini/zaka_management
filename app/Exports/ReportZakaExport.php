@@ -26,6 +26,12 @@ class ReportZakaExport implements FromCollection, WithHeadings
     {
         $query = Zaka::with('mwanajumuiya.jumuiya');
 
+        if ($this->jumuiyaId) {
+            $query->whereHas('mwanajumuiya', function ($q) {
+                $q->where('jumuiya_id', $this->jumuiyaId);
+            });
+        }
+
         if ($this->startDate && $this->endDate) {
             $start = Carbon::parse($this->startDate)->startOfDay();
             $end = Carbon::parse($this->endDate)->endOfDay();
