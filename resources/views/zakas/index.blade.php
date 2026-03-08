@@ -58,6 +58,24 @@
                 </div>
             </div>
             <div class="card-body">
+                <form method="GET" action="{{ route('zakas.index') }}" class="row g-3 mb-3">
+                    <div class="col-md-4">
+                        <select name="jumuiya_id" class="form-select" onchange="this.form.submit()">
+                            <option value="">Filter kwa Jumuiya (Zote)</option>
+                            @foreach($jumuiyas as $jumuiya)
+                                <option value="{{ $jumuiya->id }}" {{ request('jumuiya_id') == $jumuiya->id ? 'selected' : '' }}>
+                                    {{ $jumuiya->jina_la_jumuiya }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+                    @if(request('jumuiya_id'))
+                        <div class="col-md-2">
+                            <a href="{{ route('zakas.index') }}" class="btn btn-secondary">Ondoa Filter</a>
+                        </div>
+                    @endif
+                </form>
+
                 <table id="zakaTable" class="table table-hover my-0 w-100">
                     <thead>
                         <tr>

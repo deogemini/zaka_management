@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Zaka;
+use App\Models\Jumuiya;
 use App\Models\Mwanajumuiya;
 use App\Imports\ZakasImport;
 use App\Exports\ZakaSampleTemplateExport;
@@ -15,10 +16,20 @@ class ZakaController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $zakas = Zaka::with('mwanajumuiya.jumuiya')->orderByDesc('paid_at')->get();
-        return view('zakas.index', compact('zakas'));
+        $query = Zaka::with('mwanajumuiya.jumuiya');
+
+        if ($request->has('jumuiya_id') && $request->jumuiya_id) {
+            $query->whereHas('mwanajumuiya', function ($q) use ($request) {
+                $q->where('jumuiya_id', $request->jumuiya_id);
+            });
+        }
+
+        $zakas = $query->orderByDesc('paid_at')->get();
+        $jumuiyas = Jumuiya::orderBy('jina_la_jumuiya')->get();
+
+        return view('zakas.index', compact('zakas', 'jumuiyas'));
     }
 
     /**
