@@ -19,8 +19,7 @@
                     </div>
                     <div class="hidden lg:flex items-center justify-center">
                         <div class="w-full max-w-xl">
-                            <img src="{{ asset('img/church-photo.jpg') }}" alt="Immaculate Conception Catholic Church, North Lewisburg, Ohio" class="w-full rounded-2xl shadow-xl object-cover ring-1 ring-black/5">
-                            <p class="mt-2 text-xs text-gray-500 text-center">Photo via Wikimedia Commons (Nheyob, CC BY-SA 3.0)</p>
+                            <img src="{{ asset('img/bombambili.png') }}" alt="Bombambili Parish" class="w-full rounded-2xl shadow-xl object-cover ring-1 ring-black/5">
                         </div>
                     </div>
                 </div>
