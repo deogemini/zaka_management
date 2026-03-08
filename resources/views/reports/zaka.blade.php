@@ -31,6 +31,17 @@
                         </select>
                     </div>
                     <div class="col-md-3">
+                        <label for="jumuiya_id" class="form-label">Jumuiya</label>
+                        <select id="jumuiya_id" name="jumuiya_id" class="form-select">
+                            <option value="">All Jumuiyas</option>
+                            @foreach($jumuiyas as $jumuiya)
+                                <option value="{{ $jumuiya->id }}" {{ $jumuiyaId == $jumuiya->id ? 'selected' : '' }}>
+                                    {{ $jumuiya->jina_la_jumuiya }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="col-md-3">
                         <label for="start_date" class="form-label">Start Date</label>
                         <input type="date" id="start_date" name="start_date" class="form-control" value="{{ $startDate ?? '' }}">
                     </div>
@@ -38,7 +49,7 @@
                         <label for="end_date" class="form-label">End Date</label>
                         <input type="date" id="end_date" name="end_date" class="form-control" value="{{ $endDate ?? '' }}">
                     </div>
-                    <div class="col-md-12 d-flex align-items-end">
+                    <div class="col-md-9 d-flex align-items-end">
                         <button type="submit" class="btn btn-primary w-100">Filter</button>
                     </div>
                 </form>
@@ -55,7 +66,7 @@
                 <div class="d-flex align-items-center gap-2">
                     <h5 class="card-title mb-0 text-primary">Total: {{ number_format($total) }} TZS</h5>
                     <a class="btn btn-outline-success btn-sm"
-                       href="{{ route('reports.zaka.export', ['year' => $year, 'month' => $month, 'start_date' => $startDate, 'end_date' => $endDate]) }}">
+                       href="{{ route('reports.zaka.export', ['year' => $year, 'month' => $month, 'start_date' => $startDate, 'end_date' => $endDate, 'jumuiya_id' => $jumuiyaId]) }}">
                         Export Excel
                     </a>
                 </div>

@@ -13,7 +13,8 @@ class ReportZakaExport implements FromCollection, WithHeadings
         protected ?int $year = null,
         protected ?int $month = null,
         protected ?string $startDate = null,
-        protected ?string $endDate = null
+        protected ?string $endDate = null,
+        protected ?int $jumuiyaId = null
     ) {}
 
     public function headings(): array

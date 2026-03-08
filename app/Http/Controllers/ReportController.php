@@ -56,8 +56,15 @@ class ReportController extends Controller
         $month = $request->input('month');
         $startDate = $request->input('start_date');
         $endDate = $request->input('end_date');
+        $jumuiyaId = $request->input('jumuiya_id');
 
         $query = Zaka::with('mwanajumuiya.jumuiya');
+
+        if ($jumuiyaId) {
+            $query->whereHas('mwanajumuiya', function ($q) use ($jumuiyaId) {
+                $q->where('jumuiya_id', $jumuiyaId);
+            });
+        }
 
         if ($startDate && $endDate) {
             $start = Carbon::parse($startDate)->startOfDay();
@@ -72,8 +79,9 @@ class ReportController extends Controller
 
         $zakas = $query->orderBy('paid_at', 'desc')->get();
         $total = $zakas->sum('kiasi');
+        $jumuiyas = \App\Models\Jumuiya::orderBy('jina_la_jumuiya')->get();
 
-        return view('reports.zaka', compact('zakas', 'total', 'year', 'month', 'startDate', 'endDate'));
+        return view('reports.zaka', compact('zakas', 'total', 'year', 'month', 'startDate', 'endDate', 'jumuiyas', 'jumuiyaId'));
     }
 
     public function jumuiya(Request $request)
@@ -145,7 +153,8 @@ class ReportController extends Controller
             $request->input('year'),
             $request->input('month'),
             $request->input('start_date'),
-            $request->input('end_date')
+            $request->input('end_date'),
+            $request->input('jumuiya_id')
         ), 'zaka_report.xlsx');
     }
 
