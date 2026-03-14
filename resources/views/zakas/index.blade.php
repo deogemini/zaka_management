@@ -69,8 +69,14 @@
                             @endforeach
                         </select>
                     </div>
-                    @if(request('jumuiya_id'))
-                        <div class="col-md-2">
+                    @if(request('jumuiya_id') || request('mwanajumuiya_id'))
+                        <div class="col-md-4 d-flex align-items-center">
+                            @if(request('mwanajumuiya_id'))
+                                @php
+                                    $filteredMwanajumuiya = \App\Models\Mwanajumuiya::find(request('mwanajumuiya_id'));
+                                @endphp
+                                <span class="me-2 text-muted">Zaka za: <strong>{{ $filteredMwanajumuiya->jina_la_mwanajumuiya ?? 'Mwanajumuiya' }}</strong></span>
+                            @endif
                             <a href="{{ route('zakas.index') }}" class="btn btn-secondary">Ondoa Filter</a>
                         </div>
                     @endif

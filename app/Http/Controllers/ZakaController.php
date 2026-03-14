@@ -26,6 +26,10 @@ class ZakaController extends Controller
             });
         }
 
+        if ($request->has('mwanajumuiya_id') && $request->mwanajumuiya_id) {
+            $query->where('mwanajumuiya_id', $request->mwanajumuiya_id);
+        }
+
         $zakas = $query->orderByDesc('paid_at')->get();
         $jumuiyas = Jumuiya::orderBy('jina_la_jumuiya')->get();
 

@@ -98,9 +98,10 @@
                                 <td>{{ $mwana->kadi_namba }}</td>
                                 <td>{{ $mwana->namba_ya_simu }}</td>
                                 <td>{{ $mwana->jumuiya->jina_la_jumuiya }}</td>
-                                <td><span class="badge bg-primary">{{ $mwana->zakas_count }}</span></td>
+                                <td><a href="{{ route('zakas.index', ['mwanajumuiya_id' => $mwana->id]) }}"><span class="badge bg-primary">{{ $mwana->zakas_count }}</span></a></td>
                                 <td>
                                     <a href="{{ route('mwanajumuiya.edit', $mwana->id) }}" class="btn btn-sm btn-info">Hariri</a>
+                                    <a href="{{ route('zakas.index', ['mwanajumuiya_id' => $mwana->id]) }}" class="btn btn-sm btn-success">Angalia Zaka</a>
                                     <a href="{{ route('zakas.create', ['mwanajumuiya_id' => $mwana->id]) }}" class="btn btn-sm btn-primary">Ongeza Zaka</a>
                                     <form action="{{ route('mwanajumuiya.destroy', $mwana->id) }}" method="POST" class="d-inline">
                                         @csrf
