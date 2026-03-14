@@ -103,11 +103,13 @@
                                     <a href="{{ route('mwanajumuiya.edit', $mwana->id) }}" class="btn btn-sm btn-info">Hariri</a>
                                     <a href="{{ route('zakas.index', ['mwanajumuiya_id' => $mwana->id]) }}" class="btn btn-sm btn-success">Angalia Zaka</a>
                                     <a href="{{ route('zakas.create', ['mwanajumuiya_id' => $mwana->id]) }}" class="btn btn-sm btn-primary">Ongeza Zaka</a>
-                                    <form action="{{ route('mwanajumuiya.destroy', $mwana->id) }}" method="POST" class="d-inline">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Je, una uhakika unataka kufuta mwanajumuiya huyu?')">Futa</button>
-                                    </form>
+                                    @if(auth()->user()->role === 'admin')
+                                        <form action="{{ route('mwanajumuiya.destroy', $mwana->id) }}" method="POST" class="d-inline">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Je, una uhakika unataka kufuta mwanajumuiya huyu?')">Futa</button>
+                                        </form>
+                                    @endif
                                 </td>
                             </tr>
                         @endforeach
