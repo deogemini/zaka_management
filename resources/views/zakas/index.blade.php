@@ -2,6 +2,7 @@
 
 @push('styles')
 <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.14.0-beta3/dist/css/bootstrap-select.min.css">
 <style>
     /* Custom styles to fix pagination if Bootstrap 5 integration is partial */
     .dataTables_wrapper .dataTables_paginate .pagination {
@@ -58,9 +59,9 @@
                 </div>
             </div>
             <div class="card-body">
-                <form method="GET" action="{{ route('zakas.index') }}" class="row g-3 mb-3">
+                <form id="zakaFilterForm" method="GET" action="{{ route('zakas.index') }}" class="row g-3 mb-3">
                     <div class="col-md-4">
-                        <select name="jumuiya_id" class="form-select" onchange="this.form.submit()">
+                        <select name="jumuiya_id" id="jumuiya_id" class="selectpicker" data-live-search="true" data-width="100%">
                             <option value="">Filter kwa Jumuiya (Zote)</option>
                             @foreach($jumuiyas as $jumuiya)
                                 <option value="{{ $jumuiya->id }}" {{ request('jumuiya_id') == $jumuiya->id ? 'selected' : '' }}>
@@ -129,8 +130,13 @@
 <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
 <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
 <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.14.0-beta3/dist/js/bootstrap-select.min.js"></script>
 <script>
     $(document).ready(function() {
+        $('.selectpicker').selectpicker();
+        $('#jumuiya_id').on('changed.bs.select', function() {
+            $('#zakaFilterForm').submit();
+        });
         $('#zakaTable').DataTable({
             "order": [[ 7, "desc" ]], // Sort by Muda wa Malipo (index 7) descending by default
             "pageLength": 50,
