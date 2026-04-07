@@ -37,6 +37,7 @@ Route::middleware('auth')->group(function () {
     Route::get('zakas/import', [ZakaController::class, 'importForm'])->name('zakas.import.form');
     Route::post('zakas/import', [ZakaController::class, 'import'])->name('zakas.import');
     Route::get('zakas/sample', [ZakaController::class, 'sample'])->name('zakas.sample');
+    Route::post('zakas/{zaka}/resend-sms', [ZakaController::class, 'resendSms'])->name('zakas.resend-sms');
     Route::resource('zakas', ZakaController::class)->where(['zaka' => '[0-9]+']);
 
     Route::get('reports/zaka', [App\Http\Controllers\ReportController::class, 'zaka'])->name('reports.zaka');

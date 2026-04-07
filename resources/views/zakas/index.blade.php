@@ -93,6 +93,7 @@
                             <th>Risiti Namba</th>
                             <th>Mode ya Malipo</th>
                             <th>Hali ya Malipo</th>
+                            <th>SMS</th>
                             <th>Muda wa Malipo</th>
                             <th>Actions</th>
                         </tr>
@@ -107,6 +108,21 @@
                                 <td>{{ $zaka->risiti_namba }}</td>
                                 <td>{{ $zaka->mode_ya_malipo }}</td>
                                 <td>{{ $zaka->hali_ya_malipo ?? '-' }}</td>
+                                <td>
+                                    @if($zaka->sms_sent)
+                                        <span class="badge bg-success">Imetumwa</span>
+                                    @else
+                                        <div class="d-flex align-items-center">
+                                            <span class="badge bg-secondary me-1">Bado</span>
+                                            <form action="{{ route('zakas.resend-sms', $zaka->id) }}" method="POST" class="d-inline">
+                                                @csrf
+                                                <button type="submit" class="btn btn-sm btn-link p-0 text-primary" title="Tuma tena SMS">
+                                                    <i class="align-middle" data-feather="send"></i> Tuma Tena
+                                                </button>
+                                            </form>
+                                        </div>
+                                    @endif
+                                </td>
                                 <td data-sort="{{ optional($zaka->paid_at)->timestamp }}">{{ optional($zaka->paid_at)->format('Y-m-d H:i') }}</td>
                                 <td>
                                     <a href="{{ route('zakas.edit', $zaka->id) }}" class="btn btn-sm btn-info">Hariri</a>
@@ -140,7 +156,7 @@
             $('#zakaFilterForm').submit();
         });
         $('#zakaTable').DataTable({
-            "order": [[ 7, "desc" ]], // Sort by Muda wa Malipo (index 7) descending by default
+            "order": [[ 8, "desc" ]], // Sort by Muda wa Malipo (index 8) descending by default
             "pageLength": 50,
             "lengthMenu": [[10, 20, 50, 100, -1], [10, 20, 50, 100, "All"]],
             "language": {

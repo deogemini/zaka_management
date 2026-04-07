@@ -7,6 +7,7 @@ use App\Models\Jumuiya;
 use App\Models\Mwanajumuiya;
 use App\Imports\ZakasImport;
 use App\Exports\ZakaSampleTemplateExport;
+use App\Jobs\SendZakaSmsJob;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Services\AuditService;
 use Illuminate\Http\Request;
@@ -94,6 +95,12 @@ class ZakaController extends Controller
     {
         AuditService::log('zaka.sample_download', null, ['template' => 'zaka_template.xlsx']);
         return Excel::download(new ZakaSampleTemplateExport(), 'zaka_template.xlsx');
+    }
+
+    public function resendSms(Zaka $zaka)
+    {
+        SendZakaSmsJob::dispatch($zaka)->afterResponse();
+        return back()->with('success', 'SMS imetumwa tena kwenye foleni.');
     }
 
     /**
