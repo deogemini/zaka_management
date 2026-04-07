@@ -27,7 +27,6 @@ class SendZakaSmsJob implements ShouldQueue
      */
     public function handle(FlexSmsService $smsService): void
     {
-        Log::info('SendZakaSmsJob handle started for Zaka ID ' . $this->zaka->id);
         $mwanajumuiya = $this->zaka->mwanajumuiya;
 
         if (!$mwanajumuiya || !$mwanajumuiya->namba_ya_simu) {

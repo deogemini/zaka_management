@@ -10,7 +10,6 @@ class Zaka extends Model
     protected static function booted()
     {
         static::created(function (Zaka $zaka) {
-            \Illuminate\Support\Facades\Log::info('Zaka created event fired for ID ' . $zaka->id);
             SendZakaSmsJob::dispatch($zaka)->afterResponse();
         });
     }

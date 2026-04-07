@@ -8,6 +8,7 @@ use App\Http\Controllers\ZakaController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\SmsSettingController;
 use App\Http\Middleware\AdminMiddleware;
 
 Route::get('/', function () {
@@ -32,6 +33,8 @@ Route::middleware('auth')->group(function () {
     Route::middleware(AdminMiddleware::class)->group(function () {
         Route::resource('users', UserController::class);
         Route::get('audit-trails', [App\Http\Controllers\AuditTrailController::class, 'index'])->name('audit_trails.index');
+        Route::get('settings/sms', [SmsSettingController::class, 'index'])->name('settings.sms.index');
+        Route::put('settings/sms', [SmsSettingController::class, 'update'])->name('settings.sms.update');
     });
     Route::resource('watotos', App\Http\Controllers\WatotoController::class);
     Route::get('zakas/import', [ZakaController::class, 'importForm'])->name('zakas.import.form');

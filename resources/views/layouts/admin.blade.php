@@ -88,11 +88,6 @@
               <i class="align-middle" data-feather="shield"></i> <span class="align-middle">User Management</span>
             </a>
 					</li>
-                    <li class="sidebar-item {{ request()->routeIs('audit_trails.*') ? 'active' : '' }}">
-						<a class="sidebar-link" href="{{ route('audit_trails.index') }}">
-              <i class="align-middle" data-feather="activity"></i> <span class="align-middle">Audit Trails</span>
-            </a>
-					</li>
                     @endif
 
 					<li class="sidebar-item {{ request()->routeIs('profile.edit') ? 'active' : '' }}">
@@ -101,15 +96,22 @@
             </a>
 					</li>
 
+                    @if(Auth::user()?->role === 'admin')
 					<li class="sidebar-header">
-						Tools & Components
+						System Settings
 					</li>
 
-					<li class="sidebar-item">
-						<a class="sidebar-link" href="#">
-              <i class="align-middle" data-feather="square"></i> <span class="align-middle">Buttons</span>
+					<li class="sidebar-item {{ request()->routeIs('audit_trails.*') ? 'active' : '' }}">
+						<a class="sidebar-link" href="{{ route('audit_trails.index') }}">
+              <i class="align-middle" data-feather="activity"></i> <span class="align-middle">Audit Trails</span>
             </a>
 					</li>
+                    <li class="sidebar-item {{ request()->routeIs('settings.sms.*') ? 'active' : '' }}">
+						<a class="sidebar-link" href="{{ route('settings.sms.index') }}">
+              <i class="align-middle" data-feather="message-square"></i> <span class="align-middle">SMS Settings</span>
+            </a>
+					</li>
+                    @endif
 				</ul>
 			</div>
 		</nav>
