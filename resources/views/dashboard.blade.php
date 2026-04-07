@@ -118,30 +118,56 @@
 </div>
 
 <div class="row">
-    <div class="col-12 col-lg-8 col-xxl-9 d-flex">
+    <div class="col-12 col-lg-6 d-flex">
         <div class="card flex-fill">
             <div class="card-header">
-
                 <h5 class="card-title mb-0">Top Contributors ({{ $year }})</h5>
             </div>
             <table class="table table-hover my-0">
                 <thead>
                     <tr>
                         <th>Jina</th>
-                        <th class="d-none d-xl-table-cell">Last Paid</th>
                         <th class="d-none d-xl-table-cell">Jumuiya</th>
-                        <th class="d-none d-md-table-cell">Total Zaka</th>
+                        <th class="text-end">Total Zaka</th>
                     </tr>
                 </thead>
                 <tbody>
                     @foreach($topMembers as $mwana)
                     <tr>
                         <td>{{ $mwana->mwanajumuiya->jina_la_mwanajumuiya }}</td>
-                        <td class="d-none d-xl-table-cell">
-                            {{ optional($mwana->last_paid) ? \Carbon\Carbon::parse($mwana->last_paid)->format('d/m/Y') : '-' }}
-                        </td>
                         <td class="d-none d-xl-table-cell">{{ $mwana->mwanajumuiya->jumuiya->jina_la_jumuiya }}</td>
-                        <td class="d-none d-md-table-cell">{{ number_format($mwana->total) }}</td>
+                        <td class="text-end">{{ number_format($mwana->total) }}</td>
+                    </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="col-12 col-lg-6 d-flex">
+        <div class="card flex-fill">
+            <div class="card-header">
+                <h5 class="card-title mb-0">Recent Zaka Contributions</h5>
+            </div>
+            <table class="table table-hover my-0">
+                <thead>
+                    <tr>
+                        <th>Jina</th>
+                        <th class="d-none d-xl-table-cell">Tarehe</th>
+                        <th class="text-end">Kiasi (Tsh)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach($recentZakas as $zaka)
+                    <tr>
+                        <td>
+                            {{ $zaka->mwanajumuiya->jina_la_mwanajumuiya }}<br>
+                            <small class="text-muted">{{ $zaka->mwanajumuiya->jumuiya->jina_la_jumuiya }}</small>
+                        </td>
+                        <td class="d-none d-xl-table-cell">
+                            {{ $zaka->paid_at ? $zaka->paid_at->format('d/m/Y') : '-' }}
+                        </td>
+                        <td class="text-end">{{ number_format($zaka->kiasi) }}</td>
                     </tr>
                     @endforeach
                 </tbody>

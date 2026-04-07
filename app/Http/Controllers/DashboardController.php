@@ -85,6 +85,12 @@ class DashboardController extends Controller
         $totalWanajumuiya = Mwanajumuiya::count();
         $totalWatoto = Watoto::count();
 
+        $recentZakas = Zaka::with('mwanajumuiya.jumuiya')
+            ->orderByDesc('paid_at')
+            ->orderByDesc('id')
+            ->limit(10)
+            ->get();
+
         return view('dashboard', compact(
             'labels',
             'amounts',
@@ -99,7 +105,8 @@ class DashboardController extends Controller
             'jumuiyaTotals',
             'kandaLabels',
             'kandaTotals',
-            'shukraniAmounts'
+            'shukraniAmounts',
+            'recentZakas'
         ));
     }
 }
