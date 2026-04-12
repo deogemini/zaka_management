@@ -55,6 +55,23 @@
                 </div>
             </div>
             <div class="card-body">
+                <form action="{{ route('shukranis.index') }}" method="GET" class="row mb-3">
+                    <div class="col-md-4">
+                        <select name="jumuiya_id" class="form-select" onchange="this.form.submit()">
+                            <option value="">-- Chujio kwa Jumuiya --</option>
+                            @foreach($jumuiyas as $j)
+                                <option value="{{ $j->id }}" {{ request('jumuiya_id') == $j->id ? 'selected' : '' }}>
+                                    {{ $j->jina_la_jumuiya }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+                    @if(request()->filled('jumuiya_id'))
+                    <div class="col-md-2">
+                        <a href="{{ route('shukranis.index') }}" class="btn btn-secondary">Ondoa Chujio</a>
+                    </div>
+                    @endif
+                </form>
                 <table id="shukraniTable" class="table table-hover my-0 w-100">
                     <thead>
                         <tr>

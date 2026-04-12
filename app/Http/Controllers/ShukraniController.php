@@ -13,10 +13,20 @@ class ShukraniController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $shukranis = Shukrani::with('mtoto.jumuiya')->orderByDesc('paid_at')->get();
-        return view('shukranis.index', compact('shukranis'));
+        $query = Shukrani::with('mtoto.jumuiya')->orderByDesc('paid_at');
+
+        if ($request->filled('jumuiya_id')) {
+            $query->whereHas('mtoto', function($q) use ($request) {
+                $q->where('jumuiya_id', $request->jumuiya_id);
+            });
+        }
+
+        $shukranis = $query->get();
+        $jumuiyas = Jumuiya::orderBy('jina_la_jumuiya')->get();
+
+        return view('shukranis.index', compact('shukranis', 'jumuiyas'));
     }
 
     /**
