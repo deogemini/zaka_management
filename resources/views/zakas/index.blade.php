@@ -130,7 +130,7 @@
                                         <form action="{{ route('zakas.destroy', $zaka->id) }}" method="POST" class="d-inline">
                                             @csrf
                                             @method('DELETE')
-                                            <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Je, una uhakika unataka kufuta rekodi hii ya zaka?')">Futa</button>
+                                            <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('are you sure to delete this data?')">Futa</button>
                                         </form>
                                     @endif
                                 </td>

@@ -42,7 +42,7 @@
                                 <form action="{{ route('users.destroy', $u->id) }}" method="POST" class="d-inline">
                                     @csrf
                                     @method('DELETE')
-                                    <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Je, una uhakika unataka kufuta mtumiaji huyu?')">Futa</button>
+                                    <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('are you sure to delete this data?')">Futa</button>
                                 </form>
                             </td>
                         </tr>
