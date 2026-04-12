@@ -64,10 +64,18 @@
               <i class="align-middle" data-feather="dollar-sign"></i> <span class="align-middle">Zaka Management</span>
             </a>
 					</li>
-                    <li class="sidebar-item {{ request()->routeIs('watotos.*') ? 'active' : '' }}">
-						<a class="sidebar-link" href="{{ route('watotos.index') }}">
-              <i class="align-middle" data-feather="smile"></i> <span class="align-middle">Watoto Management</span>
-            </a>
+                    <li class="sidebar-item {{ request()->routeIs('watotos.*') || request()->routeIs('shukranis.*') ? 'active' : '' }}">
+                        <a data-bs-target="#watoto-mgmt" data-bs-toggle="collapse" class="sidebar-link collapsed">
+                            <i class="align-middle" data-feather="smile"></i> <span class="align-middle">Watoto Management</span>
+                        </a>
+                        <ul id="watoto-mgmt" class="sidebar-dropdown list-unstyled collapse {{ request()->routeIs('watotos.*') || request()->routeIs('shukranis.*') ? 'show' : '' }}" data-bs-parent="#sidebar">
+                            <li class="sidebar-item {{ request()->routeIs('watotos.*') ? 'active' : '' }}">
+                                <a class="sidebar-link" href="{{ route('watotos.index') }}">Watoto List</a>
+                            </li>
+                            <li class="sidebar-item {{ request()->routeIs('shukranis.*') ? 'active' : '' }}">
+                                <a class="sidebar-link" href="{{ route('shukranis.index') }}">Shukrani Management</a>
+                            </li>
+                        </ul>
 					</li>
 
                     <li class="sidebar-item {{ request()->routeIs('reports.*') ? 'active' : '' }}">
