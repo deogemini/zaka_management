@@ -63,6 +63,7 @@
                             <th>Tarehe ya Kuzaliwa</th>
                             <th>Namba ya Mzazi</th>
                             <th>Jumuiya</th>
+                            <th>Idadi ya Shukrani</th>
                             <th>Actions</th>
                         </tr>
                     </thead>
@@ -74,6 +75,7 @@
                                 <td data-sort="{{ optional($mtoto->tarehe_ya_kuzaliwa)?->timestamp }}">{{ $mtoto->tarehe_ya_kuzaliwa ?? '-' }}</td>
                                 <td>{{ $mtoto->namba_ya_mzazi ?? '-' }}</td>
                                 <td>{{ $mtoto->jumuiya?->jina_la_jumuiya }}</td>
+                                <td><span class="badge bg-success">{{ $mtoto->shukranis_count }}</span></td>
                                 <td>
                                     <a href="{{ route('watotos.edit', $mtoto->id) }}" class="btn btn-sm btn-info">Hariri</a>
                                     <a href="{{ route('shukranis.create', ['watoto_id' => $mtoto->id]) }}" class="btn btn-sm btn-primary">Ongeza Shukrani</a>
