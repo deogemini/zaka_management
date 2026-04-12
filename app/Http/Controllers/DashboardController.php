@@ -84,6 +84,7 @@ class DashboardController extends Controller
         $wanajumuiya = Mwanajumuiya::with('jumuiya')->orderBy('jina_la_mwanajumuiya')->get();
         $totalWanajumuiya = Mwanajumuiya::count();
         $totalWatoto = Watoto::count();
+        $totalSmsSent = Zaka::whereYear('paid_at', $year)->where('sms_sent', true)->count();
 
         $recentZakas = Zaka::with('mwanajumuiya.jumuiya')
             ->orderByDesc('paid_at')
@@ -101,6 +102,7 @@ class DashboardController extends Controller
             'mwanaId',
             'totalWanajumuiya',
             'totalWatoto',
+            'totalSmsSent',
             'jumuiyaLabels',
             'jumuiyaTotals',
             'kandaLabels',

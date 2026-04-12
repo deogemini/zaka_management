@@ -85,6 +85,28 @@
                     </div>
                 </div>
             </div>
+            <div class="row mt-3">
+                <div class="col-sm-6">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col mt-0">
+                                    <h5 class="card-title">SMS Zilizotumwa (Successful)</h5>
+                                </div>
+                                <div class="col-auto">
+                                    <div class="stat text-primary">
+                                        <i class="align-middle" data-feather="message-square"></i>
+                                    </div>
+                                </div>
+                            </div>
+                            <h1 class="mt-1 mb-3">{{ number_format($totalSmsSent) }}</h1>
+                            <div class="mb-0">
+                                <span class="text-muted">Kwa mwaka {{ $year }}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
