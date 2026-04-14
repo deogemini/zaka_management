@@ -2,7 +2,8 @@
 
 namespace App\Http\Requests\Auth;
 
-use Illuminate\Auth\Events\Lockout;
+use App\Models\User;
+use App\Services\LoginSecurityService;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\RateLimiter;
@@ -39,20 +40,29 @@ class LoginRequest extends FormRequest
      */
     public function authenticate(): void
     {
-        $this->ensureIsNotRateLimited();
+        $this->ensureBasicRateLimit();
 
-        $login = (string) $this->string('login');
+        $login = trim((string) $this->string('login'));
         $field = filter_var($login, FILTER_VALIDATE_EMAIL) ? 'email' : 'phone';
+        if ($field === 'email') {
+            $login = Str::lower($login);
+        }
+        $ipAddress = (string) $this->ip();
+        $user = User::where($field, $login)->first();
+        $security = app(LoginSecurityService::class);
+
+        $security->ensureLoginIsAllowed($user, $ipAddress);
 
         if (! Auth::attempt([$field => $login, 'password' => $this->string('password')], $this->boolean('remember'))) {
-            RateLimiter::hit($this->throttleKey());
+            $security->recordFailedAttempt($user, $ipAddress, $login);
 
             throw ValidationException::withMessages([
-                'login' => trans('auth.failed'),
+                'login' => ['Invalid credentials or login temporarily unavailable.'],
             ]);
         }
 
-        RateLimiter::clear($this->throttleKey());
+        $security->clearAttemptsOnSuccess(Auth::user(), $ipAddress);
+        RateLimiter::clear($this->basicRateLimitKey());
     }
 
     /**
@@ -60,29 +70,29 @@ class LoginRequest extends FormRequest
      *
      * @throws \Illuminate\Validation\ValidationException
      */
-    public function ensureIsNotRateLimited(): void
+    public function ensureBasicRateLimit(): void
     {
-        if (! RateLimiter::tooManyAttempts($this->throttleKey(), 5)) {
+        $maxRequests = max(1, (int) config('login_security.max_requests_per_minute', 20));
+        $decaySeconds = max(1, (int) config('login_security.rate_limit_decay_seconds', 60));
+        $rateKey = $this->basicRateLimitKey();
+
+        if (! RateLimiter::tooManyAttempts($rateKey, $maxRequests)) {
+            RateLimiter::hit($rateKey, $decaySeconds);
             return;
         }
 
-        event(new Lockout($this));
-
-        $seconds = RateLimiter::availableIn($this->throttleKey());
+        $seconds = RateLimiter::availableIn($rateKey);
 
         throw ValidationException::withMessages([
-            'login' => trans('auth.throttle', [
-                'seconds' => $seconds,
-                'minutes' => ceil($seconds / 60),
-            ]),
+            'login' => ["Too many login requests. Try again in {$seconds} second(s)."],
         ]);
     }
 
     /**
      * Get the rate limiting throttle key for the request.
      */
-    public function throttleKey(): string
+    public function basicRateLimitKey(): string
     {
-        return Str::transliterate(Str::lower($this->string('login')).'|'.$this->ip());
+        return Str::transliterate('login-rate-limit|'.$this->ip());
     }
 }

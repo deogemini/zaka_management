@@ -26,6 +26,7 @@
                             <th>Email</th>
                             <th>Namba ya Simu</th>
                             <th>Role</th>
+                            <th>Login Lock</th>
                             <th>Actions</th>
                         </tr>
                     </thead>
@@ -38,7 +39,22 @@
                             <td>{{ $u->phone }}</td>
                             <td><span class="badge {{ $u->role === 'admin' ? 'bg-danger' : 'bg-secondary' }}">{{ $u->role }}</span></td>
                             <td>
+                                @if($u->account_locked_until && $u->account_locked_until->isFuture())
+                                    <span class="badge bg-warning text-dark">Locked until {{ $u->account_locked_until->format('Y-m-d H:i') }}</span>
+                                @elseif($u->failed_login_attempts > 0)
+                                    <span class="badge bg-light text-dark">Attempts: {{ $u->failed_login_attempts }}</span>
+                                @else
+                                    <span class="badge bg-success">Normal</span>
+                                @endif
+                            </td>
+                            <td>
                                 <a href="{{ route('users.edit', $u->id) }}" class="btn btn-sm btn-info">Hariri</a>
+                                @if(($u->account_locked_until && $u->account_locked_until->isFuture()) || $u->failed_login_attempts > 0)
+                                    <form action="{{ route('users.unlock-login-lock', $u->id) }}" method="POST" class="d-inline">
+                                        @csrf
+                                        <button type="submit" class="btn btn-sm btn-warning">Unlock Login</button>
+                                    </form>
+                                @endif
                                 <form action="{{ route('users.destroy', $u->id) }}" method="POST" class="d-inline">
                                     @csrf
                                     @method('DELETE')

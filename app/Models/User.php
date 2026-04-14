@@ -24,6 +24,9 @@ class User extends Authenticatable
         'role',
         'avatar',
         'password',
+        'failed_login_attempts',
+        'last_failed_login_at',
+        'account_locked_until',
     ];
 
     /**
@@ -46,6 +49,8 @@ class User extends Authenticatable
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'last_failed_login_at' => 'datetime',
+            'account_locked_until' => 'datetime',
         ];
     }
 }

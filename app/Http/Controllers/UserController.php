@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use App\Services\AuditService;
+use App\Services\LoginSecurityService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 
@@ -122,5 +123,15 @@ class UserController extends Controller
         $user->delete();
         AuditService::log('user.delete', $user, ['deleted' => true]);
         return redirect()->route('users.index')->with('success', 'User deleted successfully.');
+    }
+
+    /**
+     * Manually remove login lock and counters.
+     */
+    public function unlockLoginLock(User $user, LoginSecurityService $loginSecurityService)
+    {
+        $loginSecurityService->unlockUser($user);
+
+        return redirect()->route('users.index')->with('success', 'User login lock cleared successfully.');
     }
 }

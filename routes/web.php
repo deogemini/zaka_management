@@ -32,6 +32,7 @@ Route::middleware('auth')->group(function () {
 
     Route::middleware(AdminMiddleware::class)->group(function () {
         Route::resource('users', UserController::class);
+        Route::post('users/{user}/unlock-login-lock', [UserController::class, 'unlockLoginLock'])->name('users.unlock-login-lock');
         Route::get('audit-trails', [App\Http\Controllers\AuditTrailController::class, 'index'])->name('audit_trails.index');
         Route::get('settings/sms', [SmsSettingController::class, 'index'])->name('settings.sms.index');
         Route::put('settings/sms', [SmsSettingController::class, 'update'])->name('settings.sms.update');
