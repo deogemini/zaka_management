@@ -11,6 +11,7 @@ use App\Jobs\SendZakaSmsJob;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Services\AuditService;
 use Illuminate\Http\Request;
+use Illuminate\Validation\ValidationException;
 
 class ZakaController extends Controller
 {
@@ -117,6 +118,15 @@ class ZakaController extends Controller
             'paid_at' => 'required|date',
         ]);
 
+        if (Zaka::where('mwanajumuiya_id', $request->mwanajumuiya_id)
+            ->where('risiti_namba', $request->risiti_namba)
+            ->whereDate('paid_at', $request->paid_at)
+            ->exists()) {
+            throw ValidationException::withMessages([
+                'risiti_namba' => 'Nambari ya risiti tayari imeandikishwa kwa mwanajumuiya huyu tarehe hii.',
+            ]);
+        }
+
         $data = $request->all();
         $data['mode_ya_malipo'] = $data['mode_ya_malipo'] ?? 'cash';
         $data['hali_ya_malipo'] = $data['hali_ya_malipo'] ?? 'full';
@@ -159,6 +169,16 @@ class ZakaController extends Controller
         ]);
 
         $zaka = Zaka::findOrFail($id);
+        if (Zaka::where('mwanajumuiya_id', $request->mwanajumuiya_id)
+            ->where('risiti_namba', $request->risiti_namba)
+            ->whereDate('paid_at', $request->paid_at)
+            ->where('id', '!=', $zaka->id)
+            ->exists()) {
+            throw ValidationException::withMessages([
+                'risiti_namba' => 'Nambari ya risiti tayari imeandikishwa kwa mwanajumuiya huyu tarehe hii.',
+            ]);
+        }
+
         $original = $zaka->getOriginal();
         $data = $request->all();
         $data['mode_ya_malipo'] = $data['mode_ya_malipo'] ?? 'cash';

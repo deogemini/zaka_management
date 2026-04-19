@@ -66,6 +66,16 @@ class ZakasImport implements ToCollection, WithHeadingRow
                     continue;
                 }
 
+                $paidDate = Carbon::parse($paidAt)->toDateString();
+                if (Zaka::where('mwanajumuiya_id', $mwana->id)
+                    ->where('risiti_namba', $risiti)
+                    ->whereDate('paid_at', $paidDate)
+                    ->exists()) {
+                    $this->skipped++;
+                    $this->errors[] = "Row ".($index+2).": Duplicate receipt for this member on {$paidDate}.";
+                    continue;
+                }
+
                 Zaka::create([
                     'mwanajumuiya_id' => $mwana->id,
                     'kiasi' => (float) $kiasi,
