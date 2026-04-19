@@ -180,15 +180,25 @@ class ZakaController extends Controller
         }
 
         $original = $zaka->getOriginal();
+        $originalMwanajumuiyaId = $zaka->mwanajumuiya_id;
         $data = $request->all();
         $data['mode_ya_malipo'] = $data['mode_ya_malipo'] ?? 'cash';
         $data['hali_ya_malipo'] = $data['hali_ya_malipo'] ?? 'full';
+
+        if ($originalMwanajumuiyaId != $request->mwanajumuiya_id) {
+            $data['sms_sent'] = false;
+        }
+
         $zaka->update($data);
         $changes = [];
         foreach ($zaka->getChanges() as $key => $value) {
             $changes[$key] = ['from' => $original[$key] ?? null, 'to' => $value];
         }
         AuditService::log('zaka.update', $zaka, $changes);
+
+        if ($originalMwanajumuiyaId != $request->mwanajumuiya_id) {
+            SendZakaSmsJob::dispatch($zaka)->afterResponse();
+        }
 
         return redirect()->route('zakas.index')->with('success', 'Zaka imesasishwa kikamilifu.');
     }
