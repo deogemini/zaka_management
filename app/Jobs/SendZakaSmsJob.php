@@ -36,8 +36,9 @@ class SendZakaSmsJob implements ShouldQueue
 
         $amount = number_format($this->zaka->kiasi);
         $receiptNumber = $this->zaka->risiti_namba;
+        $date = $this->zaka->paid_at ? $this->zaka->paid_at->format('d/m/Y') : 'N/A';
 
-        $message = "Asante! Parokia ya Bombambili imepokea zaka yako ya Tsh $amount (Risiti: $receiptNumber ).\n\"Apandaye kwa ukarimu, atavuna kwa ukarimu.\" 2Wakorintho 9:6";
+        $message = "Asante! Parokia ya Bombambili imepokea zaka yako ya Tsh $amount (Risiti: $receiptNumber, Tarehe: $date ).\n\"Apandaye kwa ukarimu, atavuna kwa ukarimu.\" 2Wakorintho 9:6";
 
         if ($smsService->sendSms($mwanajumuiya->namba_ya_simu, $message)) {
             $this->zaka->update(['sms_sent' => true]);
