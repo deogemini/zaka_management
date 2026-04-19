@@ -15,8 +15,9 @@
                     @method('PUT')
                     <div class="mb-3">
                         <label class="form-label">Mwanajumuiya</label>
-                        <select class="form-select @error('mwanajumuiya_id') is-invalid @enderror" name="mwanajumuiya_id">
-                            <option disabled>Chagua Mwanajumuiya</option>
+                        <input id="memberSearch" type="text" class="form-control mb-2" placeholder="Tafuta kwa jina la mwanajumuiya...">
+                        <select id="memberSelect" class="form-select @error('mwanajumuiya_id') is-invalid @enderror" name="mwanajumuiya_id" size="6">
+                            <option value="" disabled>Chagua Mwanajumuiya</option>
                             @foreach($wanajumuiya as $mwana)
                                 <option value="{{ $mwana->id }}" {{ old('mwanajumuiya_id', $zaka->mwanajumuiya_id) == $mwana->id ? 'selected' : '' }}>
                                     {{ $mwana->jina_la_mwanajumuiya }} ({{ $mwana->jumuiya->jina_la_jumuiya }})
@@ -112,6 +113,24 @@
                     input.value = parts[0];
                 }
             }
+        }
+
+        const memberSearch = document.getElementById('memberSearch');
+        const memberSelect = document.getElementById('memberSelect');
+        if (memberSearch && memberSelect) {
+            const memberOptions = Array.from(memberSelect.options);
+
+            memberSearch.addEventListener('input', function() {
+                const query = this.value.trim().toLowerCase();
+                memberOptions.forEach(option => {
+                    if (!option.value) {
+                        option.hidden = query.length > 0;
+                        return;
+                    }
+                    const text = option.textContent.toLowerCase();
+                    option.hidden = query.length > 0 && !text.includes(query);
+                });
+            });
         }
     });
 </script>
