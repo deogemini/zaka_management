@@ -19,11 +19,33 @@
                     </div>
                     <div class="hidden lg:flex items-center justify-center">
                         <div class="w-full max-w-xl">
-                            <img src="{{ asset('img/bombambili.png') }}" alt="Bombambili Parish" class="w-full rounded-2xl shadow-xl object-cover ring-1 ring-black/5">
+                            <img id="authSideImage" src="{{ asset('img/bombambili.png') }}" alt="Bombambili Parish" class="w-full rounded-2xl shadow-xl object-cover ring-1 ring-black/5">
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+        <script>
+            (function() {
+                const imageElement = document.getElementById('authSideImage');
+                if (!imageElement) {
+                    return;
+                }
+
+                const images = [
+                    '{{ asset('img/bombambili.png') }}',
+                    '{{ asset('img/bombambili_parish.jpg') }}',
+                    '{{ asset('img/church-illustration.svg') }}',
+                    '{{ asset('img/login-illustration.svg') }}'
+                ];
+                let currentIndex = 0;
+                const intervalMs = 5000;
+
+                setInterval(() => {
+                    currentIndex = (currentIndex + 1) % images.length;
+                    imageElement.src = images[currentIndex];
+                }, intervalMs);
+            })();
+        </script>
     </body>
 </html>

@@ -54,7 +54,8 @@
                 </label>
             </div>
             <x-primary-button class="w-full justify-center py-3 text-sm shadow-md">
-                {{ __('Log in') }}
+                <img id="loginBtnIcon" src="{{ asset('img/login-illustration.svg') }}" alt="Login icon" class="h-5 w-5 me-2" />
+                <span>{{ __('Log in') }}</span>
             </x-primary-button>
         </div>
     </form>
@@ -64,6 +65,8 @@
             const btn = document.getElementById('togglePassword');
             const eye = document.getElementById('iconEye');
             const eyeOff = document.getElementById('iconEyeOff');
+            const loginBtnIcon = document.getElementById('loginBtnIcon');
+
             if (btn && input) {
                 btn.addEventListener('click', function() {
                     const showing = input.type === 'text';
@@ -71,6 +74,21 @@
                     eye.classList.toggle('hidden', !showing);
                     eyeOff.classList.toggle('hidden', showing);
                 });
+            }
+
+            if (loginBtnIcon) {
+                const buttonImages = [
+                    '{{ asset('img/login-illustration.svg') }}',
+                    '{{ asset('img/church-illustration.svg') }}',
+                    '{{ asset('img/bombambili.png') }}'
+                ];
+                let btnIndex = 0;
+                const buttonInterval = 6000;
+
+                setInterval(() => {
+                    btnIndex = (btnIndex + 1) % buttonImages.length;
+                    loginBtnIcon.src = buttonImages[btnIndex];
+                }, buttonInterval);
             }
         })();
     </script>
