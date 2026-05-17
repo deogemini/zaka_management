@@ -52,13 +52,7 @@ class FlexSmsService
             Log::error('SMS Client ID or Secret is missing.');
             return false;
         }
-        // Clean phone number: remove '+' and ensure it starts with 255
-        $recipient = preg_replace('/[^0-9]/', '', $recipient);
-        if (str_starts_with($recipient, '0')) {
-            $recipient = '255' . substr($recipient, 1);
-        } elseif (!str_starts_with($recipient, '255')) {
-            $recipient = '255' . $recipient;
-        }
+        $recipient = $this->formatRecipient($recipient);
 
         try {
             $response = Http::withHeaders([
@@ -84,5 +78,77 @@ class FlexSmsService
             Log::error('Flex SMS Exception: ' . $e->getMessage());
             return false;
         }
+    }
+
+    /**
+     * Send the same SMS content to multiple recipients via Flex SMS Gateway.
+     */
+    public function sendBulkSms(array $recipients, string $message, ?string $schedule = null): bool
+    {
+        if (!$this->isEnabled) {
+            Log::info('SMS Sending is disabled in settings.');
+            return false;
+        }
+
+        if (empty($this->clientId) || empty($this->clientSecret)) {
+            Log::error('SMS Client ID or Secret is missing.');
+            return false;
+        }
+
+        $recipients = collect($recipients)
+            ->map(fn ($recipient) => $this->formatRecipient((string) $recipient))
+            ->filter()
+            ->unique()
+            ->values()
+            ->all();
+
+        if (empty($recipients)) {
+            Log::info('Bulk SMS skipped: no valid recipients provided.');
+            return false;
+        }
+
+        try {
+            $response = Http::withHeaders([
+                'X-Client-Id' => $this->clientId,
+                'X-Client-Secret' => $this->clientSecret,
+                'Accept' => 'application/json',
+                'Content-Type' => 'application/json',
+            ])->post($this->baseUrl . '/api/v1/sms/send', [
+                'senderId' => $this->senderId,
+                'recipients' => $recipients,
+                'contents' => $message,
+                'schedule' => $schedule,
+                'schedule_type' => 'once',
+            ]);
+
+            if ($response->successful()) {
+                return true;
+            }
+
+            Log::error('Flex Bulk SMS API Error: ' . $response->body());
+            return false;
+        } catch (\Exception $e) {
+            Log::error('Flex Bulk SMS Exception: ' . $e->getMessage());
+            return false;
+        }
+    }
+
+    protected function formatRecipient(string $recipient): string
+    {
+        $recipient = preg_replace('/[^0-9]/', '', $recipient);
+
+        if ($recipient === '') {
+            return '';
+        }
+
+        if (str_starts_with($recipient, '0')) {
+            return '255' . substr($recipient, 1);
+        }
+
+        if (!str_starts_with($recipient, '255')) {
+            return '255' . $recipient;
+        }
+
+        return $recipient;
     }
 }

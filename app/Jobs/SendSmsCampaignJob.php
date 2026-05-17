@@ -43,22 +43,30 @@ class SendSmsCampaignJob implements ShouldQueue
 
         $campaign->update(['status' => 'sending']);
 
-        foreach ($campaign->recipients()->where('status', 'pending')->get() as $recipient) {
-            if (!$recipient->phone) {
-                $recipient->update([
-                    'status' => 'failed',
-                    'error_message' => 'Phone number is missing.',
-                ]);
-                continue;
-            }
+        $pendingRecipients = $campaign->recipients()->where('status', 'pending')->get();
+        $recipientsWithPhone = $pendingRecipients->filter(fn ($recipient) => filled($recipient->phone));
+        $recipientsWithoutPhone = $pendingRecipients->reject(fn ($recipient) => filled($recipient->phone));
 
-            $sent = $smsService->sendSms($recipient->phone, $campaign->message);
-
+        foreach ($recipientsWithoutPhone as $recipient) {
             $recipient->update([
-                'status' => $sent ? 'sent' : 'failed',
-                'error_message' => $sent ? null : 'SMS gateway rejected or failed to send this message.',
-                'sent_at' => $sent ? now() : null,
+                'status' => 'failed',
+                'error_message' => 'Phone number is missing.',
             ]);
+        }
+
+        if ($recipientsWithPhone->isNotEmpty()) {
+            $sent = $smsService->sendBulkSms(
+                $recipientsWithPhone->pluck('phone')->all(),
+                $campaign->message
+            );
+
+            foreach ($recipientsWithPhone as $recipient) {
+                $recipient->update([
+                    'status' => $sent ? 'sent' : 'failed',
+                    'error_message' => $sent ? null : 'SMS gateway rejected or failed to send this campaign.',
+                    'sent_at' => $sent ? now() : null,
+                ]);
+            }
         }
 
         $this->refreshCampaignCounts($campaign);
