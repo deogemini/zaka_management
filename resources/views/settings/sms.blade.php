@@ -22,6 +22,12 @@
                     </div>
                 @endif
 
+                @php
+                    $selectedSmsUsers = collect(old('sms_enabled_users', $users->where('sms_enabled', true)->pluck('id')->all()))
+                        ->map(fn ($id) => (int) $id)
+                        ->all();
+                @endphp
+
                 <form action="{{ route('settings.sms.update') }}" method="POST">
                     @csrf
                     @method('PUT')
@@ -64,6 +70,53 @@
                             <span class="form-check-label">Enable SMS Sending</span>
                         </label>
                         <small class="text-muted">Turn off to stop all outgoing SMS notifications.</small>
+                    </div>
+
+                    <hr>
+
+                    <div class="mb-3">
+                        <label class="form-label">Users Allowed to Send SMS</label>
+                        <div class="table-responsive">
+                            <table class="table table-sm table-hover align-middle mb-0">
+                                <thead>
+                                    <tr>
+                                        <th>User</th>
+                                        <th>Role</th>
+                                        <th class="text-end">SMS</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @forelse($users as $user)
+                                        <tr>
+                                            <td>
+                                                <div class="fw-semibold">{{ $user->name }}</div>
+                                                <div class="small text-muted">{{ $user->email }}</div>
+                                            </td>
+                                            <td>
+                                                <span class="badge {{ $user->role === 'admin' ? 'bg-danger' : 'bg-secondary' }}">{{ $user->role }}</span>
+                                            </td>
+                                            <td class="text-end">
+                                                <label class="form-check form-switch d-inline-flex align-items-center gap-2 mb-0">
+                                                    <input class="form-check-input" type="checkbox" name="sms_enabled_users[]" value="{{ $user->id }}" {{ in_array($user->id, $selectedSmsUsers, true) ? 'checked' : '' }}>
+                                                    <span class="form-check-label">Allowed</span>
+                                                </label>
+                                            </td>
+                                        </tr>
+                                    @empty
+                                        <tr>
+                                            <td colspan="3" class="text-muted">No users found.</td>
+                                        </tr>
+                                    @endforelse
+                                </tbody>
+                            </table>
+                        </div>
+                        @error('sms_enabled_users')
+                            <div class="text-danger small mt-1">{{ $message }}</div>
+                        @enderror
+                        @error('sms_enabled_users.*')
+                            <div class="text-danger small mt-1">{{ $message }}</div>
+                        @enderror
+                        <small class="text-muted">When a user is not allowed, zaka SMS created, imported, or resent by that user will be skipped.</small>
                     </div>
 
                     <div class="mb-3">

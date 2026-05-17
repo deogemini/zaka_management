@@ -10,7 +10,7 @@ class Zaka extends Model
     protected static function booted()
     {
         static::created(function (Zaka $zaka) {
-            SendZakaSmsJob::dispatch($zaka)->afterResponse();
+            SendZakaSmsJob::dispatch($zaka, auth()->user())->afterResponse();
         });
     }
 

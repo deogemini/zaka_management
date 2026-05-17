@@ -3,6 +3,7 @@
 namespace App\Jobs;
 
 use App\Models\Zaka;
+use App\Models\User;
 use App\Services\FlexSmsService;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Queue\Queueable;
@@ -13,13 +14,15 @@ class SendZakaSmsJob implements ShouldQueue
     use Queueable;
 
     protected $zaka;
+    protected ?int $senderUserId;
 
     /**
      * Create a new job instance.
      */
-    public function __construct(Zaka $zaka)
+    public function __construct(Zaka $zaka, ?User $sender = null)
     {
         $this->zaka = $zaka->load('mwanajumuiya');
+        $this->senderUserId = $sender?->id;
     }
 
     /**
@@ -27,6 +30,15 @@ class SendZakaSmsJob implements ShouldQueue
      */
     public function handle(FlexSmsService $smsService): void
     {
+        if ($this->senderUserId) {
+            $sender = User::find($this->senderUserId);
+
+            if (!$sender || !$sender->sms_enabled) {
+                Log::info('SMS Skipped: user SMS sending is disabled or user is missing for User ID ' . $this->senderUserId . ' on Zaka ID ' . $this->zaka->id);
+                return;
+            }
+        }
+
         $mwanajumuiya = $this->zaka->mwanajumuiya;
 
         if (!$mwanajumuiya || !$mwanajumuiya->namba_ya_simu) {

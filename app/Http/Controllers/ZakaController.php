@@ -100,7 +100,7 @@ class ZakaController extends Controller
 
     public function resendSms(Zaka $zaka)
     {
-        SendZakaSmsJob::dispatch($zaka)->afterResponse();
+        SendZakaSmsJob::dispatch($zaka, auth()->user())->afterResponse();
         return back()->with('success', 'SMS imetumwa tena kwenye foleni.');
     }
 
@@ -197,7 +197,7 @@ class ZakaController extends Controller
         AuditService::log('zaka.update', $zaka, $changes);
 
         if ($originalMwanajumuiyaId != $request->mwanajumuiya_id) {
-            SendZakaSmsJob::dispatch($zaka)->afterResponse();
+            SendZakaSmsJob::dispatch($zaka, $request->user())->afterResponse();
         }
 
         return redirect()->route('zakas.index')->with('success', 'Zaka imesasishwa kikamilifu.');

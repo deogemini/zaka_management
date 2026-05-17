@@ -22,6 +22,7 @@ class User extends Authenticatable
         'email',
         'phone',
         'role',
+        'sms_enabled',
         'avatar',
         'password',
         'failed_login_attempts',
@@ -49,6 +50,7 @@ class User extends Authenticatable
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'sms_enabled' => 'boolean',
             'last_failed_login_at' => 'datetime',
             'account_locked_until' => 'datetime',
         ];

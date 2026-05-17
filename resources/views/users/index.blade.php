@@ -26,6 +26,7 @@
                             <th>Email</th>
                             <th>Namba ya Simu</th>
                             <th>Role</th>
+                            <th>SMS</th>
                             <th>Login Lock</th>
                             <th>Actions</th>
                         </tr>
@@ -38,6 +39,11 @@
                             <td>{{ $u->email }}</td>
                             <td>{{ $u->phone }}</td>
                             <td><span class="badge {{ $u->role === 'admin' ? 'bg-danger' : 'bg-secondary' }}">{{ $u->role }}</span></td>
+                            <td>
+                                <span class="badge {{ $u->sms_enabled ? 'bg-success' : 'bg-secondary' }}">
+                                    {{ $u->sms_enabled ? 'Allowed' : 'Blocked' }}
+                                </span>
+                            </td>
                             <td>
                                 @if($u->account_locked_until && $u->account_locked_until->isFuture())
                                     <span class="badge bg-warning text-dark">Locked until {{ $u->account_locked_until->format('Y-m-d H:i') }}</span>
