@@ -54,13 +54,28 @@ class SendSmsCampaignJob implements ShouldQueue
             ]);
         }
 
-        if ($recipientsWithPhone->isNotEmpty()) {
+        $validRecipients = $recipientsWithPhone->filter(function ($recipient) use ($smsService) {
+            $formattedPhone = $smsService->formattedRecipient((string) $recipient->phone);
+
+            if (!$smsService->isValidRecipient($formattedPhone)) {
+                $recipient->update([
+                    'status' => 'failed',
+                    'error_message' => 'Phone number format is invalid.',
+                ]);
+
+                return false;
+            }
+
+            return true;
+        });
+
+        if ($validRecipients->isNotEmpty()) {
             $sent = $smsService->sendBulkSms(
-                $recipientsWithPhone->pluck('phone')->all(),
+                $validRecipients->pluck('phone')->all(),
                 $campaign->message
             );
 
-            foreach ($recipientsWithPhone as $recipient) {
+            foreach ($validRecipients as $recipient) {
                 $recipient->update([
                     'status' => $sent ? 'sent' : 'failed',
                     'error_message' => $sent ? null : 'SMS gateway rejected or failed to send this campaign.',

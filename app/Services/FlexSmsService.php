@@ -97,7 +97,7 @@ class FlexSmsService
 
         $recipients = collect($recipients)
             ->map(fn ($recipient) => $this->formatRecipient((string) $recipient))
-            ->filter()
+            ->filter(fn ($recipient) => $this->isValidRecipient($recipient))
             ->unique()
             ->values()
             ->all();
@@ -150,5 +150,15 @@ class FlexSmsService
         }
 
         return $recipient;
+    }
+
+    public function formattedRecipient(string $recipient): string
+    {
+        return $this->formatRecipient($recipient);
+    }
+
+    public function isValidRecipient(string $recipient): bool
+    {
+        return (bool) preg_match('/^255\d{9}$/', $recipient);
     }
 }
