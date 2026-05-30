@@ -93,4 +93,39 @@ class SmsCampaignController extends Controller
 
         return view('settings.sms-campaigns.show', ['campaign' => $smsCampaign]);
     }
+
+    public function resendFailed(Request $request, SmsCampaign $smsCampaign)
+    {
+        if (!$request->user()->sms_enabled) {
+            throw ValidationException::withMessages([
+                'message' => 'SMS sending is disabled for your user account.',
+            ]);
+        }
+
+        $failedCount = $smsCampaign->recipients()->where('status', 'failed')->count();
+
+        if ($failedCount === 0) {
+            return back()->with('success', 'There are no failed SMS recipients to resend.');
+        }
+
+        $smsCampaign->recipients()->where('status', 'failed')->update([
+            'status' => 'pending',
+            'error_message' => null,
+            'sent_at' => null,
+        ]);
+
+        $smsCampaign->update([
+            'status' => 'sending',
+            'failed_count' => 0,
+            'sent_at' => null,
+        ]);
+
+        AuditService::log('sms_campaign.resend_failed', $smsCampaign, [
+            'failed_recipients' => $failedCount,
+        ]);
+
+        SendSmsCampaignJob::dispatch($smsCampaign, $request->user()->id)->afterResponse();
+
+        return back()->with('success', 'Failed SMS recipients queued for resend.');
+    }
 }

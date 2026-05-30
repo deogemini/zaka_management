@@ -61,7 +61,15 @@
                             <td>{{ optional($campaign->user)->name ?? 'Unknown' }}</td>
                             <td>{{ $campaign->created_at->format('Y-m-d H:i') }}</td>
                             <td>
-                                <a href="{{ route('settings.sms-campaigns.show', $campaign) }}" class="btn btn-sm btn-info">View</a>
+                                <div class="d-flex gap-2">
+                                    <a href="{{ route('settings.sms-campaigns.show', $campaign) }}" class="btn btn-sm btn-info">View</a>
+                                    @if($campaign->failed_count > 0)
+                                        <form action="{{ route('settings.sms-campaigns.resend-failed', $campaign) }}" method="POST" onsubmit="return confirm('Resend failed SMS recipients for this campaign?')">
+                                            @csrf
+                                            <button type="submit" class="btn btn-sm btn-warning text-dark">Resend Failed</button>
+                                        </form>
+                                    @endif
+                                </div>
                             </td>
                         </tr>
                     @empty

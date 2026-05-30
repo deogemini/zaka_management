@@ -40,6 +40,7 @@ Route::middleware('auth')->group(function () {
         Route::get('settings/sms-campaigns', [SmsCampaignController::class, 'index'])->name('settings.sms-campaigns.index');
         Route::get('settings/sms-campaigns/create', [SmsCampaignController::class, 'create'])->name('settings.sms-campaigns.create');
         Route::post('settings/sms-campaigns', [SmsCampaignController::class, 'store'])->name('settings.sms-campaigns.store');
+        Route::post('settings/sms-campaigns/{smsCampaign}/resend-failed', [SmsCampaignController::class, 'resendFailed'])->name('settings.sms-campaigns.resend-failed');
         Route::get('settings/sms-campaigns/{smsCampaign}', [SmsCampaignController::class, 'show'])->name('settings.sms-campaigns.show');
     });
     Route::resource('watotos', App\Http\Controllers\WatotoController::class);
