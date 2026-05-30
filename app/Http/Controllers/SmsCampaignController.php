@@ -94,6 +94,27 @@ class SmsCampaignController extends Controller
         return view('settings.sms-campaigns.show', ['campaign' => $smsCampaign]);
     }
 
+    public function edit(SmsCampaign $smsCampaign)
+    {
+        return view('settings.sms-campaigns.edit', ['campaign' => $smsCampaign]);
+    }
+
+    public function update(Request $request, SmsCampaign $smsCampaign)
+    {
+        $data = $request->validate([
+            'title' => ['required', 'string', 'max:255'],
+            'message' => ['required', 'string', 'max:1000'],
+        ]);
+
+        $smsCampaign->update($data);
+
+        AuditService::log('sms_campaign.update', $smsCampaign, [
+            'title' => $smsCampaign->title,
+        ]);
+
+        return redirect()->route('settings.sms-campaigns.show', $smsCampaign)->with('success', 'SMS campaign text updated successfully.');
+    }
+
     public function resendFailed(Request $request, SmsCampaign $smsCampaign)
     {
         if (!$request->user()->sms_enabled) {

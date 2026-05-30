@@ -63,6 +63,7 @@
                             <td>
                                 <div class="d-flex gap-2">
                                     <a href="{{ route('settings.sms-campaigns.show', $campaign) }}" class="btn btn-sm btn-info">View</a>
+                                    <a href="{{ route('settings.sms-campaigns.edit', $campaign) }}" class="btn btn-sm btn-secondary">Edit</a>
                                     @if($campaign->failed_count > 0)
                                         <form action="{{ route('settings.sms-campaigns.resend-failed', $campaign) }}" method="POST" onsubmit="return confirm('Resend failed SMS recipients for this campaign?')">
                                             @csrf
