@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Zaka;
 use App\Models\Mwanajumuiya;
+use App\Models\SmsCampaignRecipient;
 use App\Models\Watoto;
 use App\Models\Shukrani;
 use Illuminate\Http\Request;
@@ -84,7 +85,11 @@ class DashboardController extends Controller
         $wanajumuiya = Mwanajumuiya::with('jumuiya')->orderBy('jina_la_mwanajumuiya')->get();
         $totalWanajumuiya = Mwanajumuiya::count();
         $totalWatoto = Watoto::count();
-        $totalSmsSent = Zaka::whereYear('paid_at', $year)->where('sms_sent', true)->count();
+        $zakaSmsSent = Zaka::whereYear('paid_at', $year)->where('sms_sent', true)->count();
+        $campaignSmsSent = SmsCampaignRecipient::where('status', 'sent')
+            ->whereYear('sent_at', $year)
+            ->count();
+        $totalSmsSent = $zakaSmsSent + $campaignSmsSent;
 
         $recentZakas = Zaka::with('mwanajumuiya.jumuiya')
             ->orderByDesc('paid_at')
