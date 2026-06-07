@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Zaka;
 use App\Models\Jumuiya;
+use App\Models\Kanda;
 use App\Models\Mwanajumuiya;
 use App\Imports\ZakasImport;
 use App\Exports\ZakaSampleTemplateExport;
@@ -22,6 +23,12 @@ class ZakaController extends Controller
     {
         $query = Zaka::with('mwanajumuiya.jumuiya');
 
+        if ($request->filled('kanda_id')) {
+            $query->whereHas('mwanajumuiya.jumuiya', function ($q) use ($request) {
+                $q->where('kanda_id', $request->kanda_id);
+            });
+        }
+
         if ($request->has('jumuiya_id') && $request->jumuiya_id) {
             $query->whereHas('mwanajumuiya', function ($q) use ($request) {
                 $q->where('jumuiya_id', $request->jumuiya_id);
@@ -33,9 +40,13 @@ class ZakaController extends Controller
         }
 
         $zakas = $query->orderByDesc('paid_at')->get();
-        $jumuiyas = Jumuiya::orderBy('jina_la_jumuiya')->get();
+        $kandas = Kanda::orderBy('jina_la_kanda')->get();
+        $jumuiyas = Jumuiya::query()
+            ->when($request->filled('kanda_id'), fn ($query) => $query->where('kanda_id', $request->kanda_id))
+            ->orderBy('jina_la_jumuiya')
+            ->get();
 
-        return view('zakas.index', compact('zakas', 'jumuiyas'));
+        return view('zakas.index', compact('zakas', 'kandas', 'jumuiyas'));
     }
 
     /**

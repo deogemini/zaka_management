@@ -61,6 +61,16 @@
             <div class="card-body">
                 <form id="zakaFilterForm" method="GET" action="{{ route('zakas.index') }}" class="row g-3 mb-3">
                     <div class="col-md-4">
+                        <select name="kanda_id" id="kanda_id" class="selectpicker" data-live-search="true" data-width="100%">
+                            <option value="">Filter kwa Kanda (Zote)</option>
+                            @foreach($kandas as $kanda)
+                                <option value="{{ $kanda->id }}" {{ request('kanda_id') == $kanda->id ? 'selected' : '' }}>
+                                    {{ $kanda->jina_la_kanda }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="col-md-4">
                         <select name="jumuiya_id" id="jumuiya_id" class="selectpicker" data-live-search="true" data-width="100%">
                             <option value="">Filter kwa Jumuiya (Zote)</option>
                             @foreach($jumuiyas as $jumuiya)
@@ -70,7 +80,7 @@
                             @endforeach
                         </select>
                     </div>
-                    @if(request('jumuiya_id') || request('mwanajumuiya_id'))
+                    @if(request('kanda_id') || request('jumuiya_id') || request('mwanajumuiya_id'))
                         <div class="col-md-4 d-flex align-items-center">
                             @if(request('mwanajumuiya_id'))
                                 @php
@@ -92,7 +102,6 @@
                             <th>Kiasi</th>
                             <th>Risiti Namba</th>
                             <th>Mode ya Malipo</th>
-                            <th>Hali ya Malipo</th>
                             <th>SMS</th>
                             <th>Muda wa Malipo</th>
                             <th>Actions</th>
@@ -107,7 +116,6 @@
                                 <td>{{ number_format($zaka->kiasi, 2) }}</td>
                                 <td>{{ $zaka->risiti_namba }}</td>
                                 <td>{{ $zaka->mode_ya_malipo }}</td>
-                                <td>{{ $zaka->hali_ya_malipo ?? '-' }}</td>
                                 <td>
                                     @if($zaka->sms_sent)
                                         <span class="badge bg-success">Imetumwa</span>
@@ -152,11 +160,11 @@
 <script>
     $(document).ready(function() {
         $('.selectpicker').selectpicker();
-        $('#jumuiya_id').on('changed.bs.select', function() {
+        $('#kanda_id, #jumuiya_id').on('changed.bs.select', function() {
             $('#zakaFilterForm').submit();
         });
         $('#zakaTable').DataTable({
-            "order": [[ 8, "desc" ]], // Sort by Muda wa Malipo (index 8) descending by default
+            "order": [[ 7, "desc" ]], // Sort by Muda wa Malipo (index 7) descending by default
             "pageLength": 50,
             "lengthMenu": [[10, 20, 50, 100, -1], [10, 20, 50, 100, "All"]],
             "language": {
