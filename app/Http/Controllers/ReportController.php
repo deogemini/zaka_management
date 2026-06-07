@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Zaka;
+use App\Models\Jumuiya;
+use App\Models\Kanda;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
@@ -56,9 +58,16 @@ class ReportController extends Controller
         $month = $request->input('month');
         $startDate = $request->input('start_date');
         $endDate = $request->input('end_date');
+        $kandaId = $request->input('kanda_id');
         $jumuiyaId = $request->input('jumuiya_id');
 
         $query = Zaka::with('mwanajumuiya.jumuiya');
+
+        if ($kandaId) {
+            $query->whereHas('mwanajumuiya.jumuiya', function ($q) use ($kandaId) {
+                $q->where('kanda_id', $kandaId);
+            });
+        }
 
         if ($jumuiyaId) {
             $query->whereHas('mwanajumuiya', function ($q) use ($jumuiyaId) {
@@ -79,9 +88,13 @@ class ReportController extends Controller
 
         $zakas = $query->orderBy('paid_at', 'desc')->get();
         $total = $zakas->sum('kiasi');
-        $jumuiyas = \App\Models\Jumuiya::orderBy('jina_la_jumuiya')->get();
+        $kandas = Kanda::orderBy('jina_la_kanda')->get();
+        $jumuiyas = Jumuiya::query()
+            ->when($kandaId, fn ($query) => $query->where('kanda_id', $kandaId))
+            ->orderBy('jina_la_jumuiya')
+            ->get();
 
-        return view('reports.zaka', compact('zakas', 'total', 'year', 'month', 'startDate', 'endDate', 'jumuiyas', 'jumuiyaId'));
+        return view('reports.zaka', compact('zakas', 'total', 'year', 'month', 'startDate', 'endDate', 'kandas', 'kandaId', 'jumuiyas', 'jumuiyaId'));
     }
 
     public function jumuiya(Request $request)
@@ -154,6 +167,7 @@ class ReportController extends Controller
             $request->input('month'),
             $request->input('start_date'),
             $request->input('end_date'),
+            $request->input('kanda_id'),
             $request->input('jumuiya_id')
         ), 'zaka_report.xlsx');
     }

@@ -31,6 +31,17 @@
                         </select>
                     </div>
                     <div class="col-md-3">
+                        <label for="kanda_id" class="form-label">Kanda</label>
+                        <select id="kanda_id" name="kanda_id" class="form-select">
+                            <option value="">All Kanda</option>
+                            @foreach($kandas as $kanda)
+                                <option value="{{ $kanda->id }}" {{ $kandaId == $kanda->id ? 'selected' : '' }}>
+                                    {{ $kanda->jina_la_kanda }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="col-md-3">
                         <label for="jumuiya_id" class="form-label">Jumuiya</label>
                         <select id="jumuiya_id" name="jumuiya_id" class="form-select">
                             <option value="">All Jumuiyas</option>
@@ -49,7 +60,7 @@
                         <label for="end_date" class="form-label">End Date</label>
                         <input type="date" id="end_date" name="end_date" class="form-control" value="{{ $endDate ?? '' }}">
                     </div>
-                    <div class="col-md-9 d-flex align-items-end">
+                    <div class="col-md-6 d-flex align-items-end">
                         <button type="submit" class="btn btn-primary w-100">Filter</button>
                     </div>
                 </form>
@@ -65,8 +76,8 @@
                 <h5 class="card-title mb-0">Zaka Transactions</h5>
                 <div class="d-flex align-items-center gap-2">
                     <h5 class="card-title mb-0 text-primary">Total: {{ number_format($total) }} TZS</h5>
-                    <a class="btn btn-outline-success btn-sm"
-                       href="{{ route('reports.zaka.export', ['year' => $year, 'month' => $month, 'start_date' => $startDate, 'end_date' => $endDate, 'jumuiya_id' => $jumuiyaId]) }}">
+                   <a class="btn btn-outline-success btn-sm"
+                       href="{{ route('reports.zaka.export', ['year' => $year, 'month' => $month, 'start_date' => $startDate, 'end_date' => $endDate, 'kanda_id' => $kandaId, 'jumuiya_id' => $jumuiyaId]) }}">
                         Export Excel
                     </a>
                 </div>

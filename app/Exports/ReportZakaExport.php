@@ -14,6 +14,7 @@ class ReportZakaExport implements FromCollection, WithHeadings
         protected ?int $month = null,
         protected ?string $startDate = null,
         protected ?string $endDate = null,
+        protected ?int $kandaId = null,
         protected ?int $jumuiyaId = null
     ) {}
 
@@ -25,6 +26,12 @@ class ReportZakaExport implements FromCollection, WithHeadings
     public function collection()
     {
         $query = Zaka::with('mwanajumuiya.jumuiya');
+
+        if ($this->kandaId) {
+            $query->whereHas('mwanajumuiya.jumuiya', function ($q) {
+                $q->where('kanda_id', $this->kandaId);
+            });
+        }
 
         if ($this->jumuiyaId) {
             $query->whereHas('mwanajumuiya', function ($q) {
