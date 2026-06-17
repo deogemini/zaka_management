@@ -3,13 +3,16 @@
 namespace App\Http\Controllers;
 
 use App\Jobs\SendSmsCampaignJob;
+use App\Imports\SmsCampaignRecipientsImport;
 use App\Models\Jumuiya;
 use App\Models\Mwanajumuiya;
 use App\Models\SmsCampaign;
+use App\Services\FlexSmsService;
 use App\Services\AuditService;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\ValidationException;
+use Maatwebsite\Excel\Facades\Excel;
 
 class SmsCampaignController extends Controller
 {
@@ -29,13 +32,14 @@ class SmsCampaignController extends Controller
         return view('settings.sms-campaigns.create', compact('jumuiyas'));
     }
 
-    public function store(Request $request)
+    public function store(Request $request, FlexSmsService $smsService)
     {
         $data = $request->validate([
             'title' => ['required', 'string', 'max:255'],
             'message' => ['required', 'string', 'max:1000'],
-            'target_type' => ['required', Rule::in(['all', 'jumuiya'])],
+            'target_type' => ['required', Rule::in(['all', 'jumuiya', 'excel'])],
             'jumuiya_id' => ['nullable', 'required_if:target_type,jumuiya', 'exists:jumuiyas,id'],
+            'recipients_file' => ['nullable', 'required_if:target_type,excel', 'file', 'mimes:xlsx,xls,csv'],
         ]);
 
         if (!$request->user()->sms_enabled) {
@@ -44,17 +48,34 @@ class SmsCampaignController extends Controller
             ]);
         }
 
-        $members = Mwanajumuiya::query()
-            ->when($data['target_type'] === 'jumuiya', fn ($query) => $query->where('jumuiya_id', $data['jumuiya_id']))
-            ->whereNotNull('namba_ya_simu')
-            ->where('namba_ya_simu', '!=', '')
-            ->orderBy('jina_la_mwanajumuiya')
-            ->get();
+        $uploadedRecipients = [];
+        $importSummary = null;
+        $members = collect();
 
-        if ($members->isEmpty()) {
-            throw ValidationException::withMessages([
-                'target_type' => 'No members with phone numbers were found for this campaign target.',
-            ]);
+        if ($data['target_type'] === 'excel') {
+            $import = new SmsCampaignRecipientsImport($smsService);
+            Excel::import($import, $request->file('recipients_file'));
+            $uploadedRecipients = $import->recipients();
+            $importSummary = $import->summary();
+
+            if (empty($uploadedRecipients)) {
+                throw ValidationException::withMessages([
+                    'recipients_file' => 'No valid phone numbers were found in the uploaded file.',
+                ]);
+            }
+        } else {
+            $members = Mwanajumuiya::query()
+                ->when($data['target_type'] === 'jumuiya', fn ($query) => $query->where('jumuiya_id', $data['jumuiya_id']))
+                ->whereNotNull('namba_ya_simu')
+                ->where('namba_ya_simu', '!=', '')
+                ->orderBy('jina_la_mwanajumuiya')
+                ->get();
+
+            if ($members->isEmpty()) {
+                throw ValidationException::withMessages([
+                    'target_type' => 'No members with phone numbers were found for this campaign target.',
+                ]);
+            }
         }
 
         $campaign = SmsCampaign::create([
@@ -64,7 +85,7 @@ class SmsCampaignController extends Controller
             'message' => $data['message'],
             'target_type' => $data['target_type'],
             'status' => 'pending',
-            'total_recipients' => $members->count(),
+            'total_recipients' => $data['target_type'] === 'excel' ? count($uploadedRecipients) : $members->count(),
         ]);
 
         foreach ($members as $member) {
@@ -76,15 +97,29 @@ class SmsCampaignController extends Controller
             ]);
         }
 
+        foreach ($uploadedRecipients as $recipient) {
+            $campaign->recipients()->create([
+                'name' => $recipient['name'],
+                'phone' => $recipient['phone'],
+                'status' => 'pending',
+            ]);
+        }
+
         AuditService::log('sms_campaign.create', $campaign, [
             'target_type' => $campaign->target_type,
             'jumuiya_id' => $campaign->jumuiya_id,
             'total_recipients' => $campaign->total_recipients,
+            'import_summary' => $importSummary,
         ]);
 
         SendSmsCampaignJob::dispatch($campaign, $request->user()->id)->afterResponse();
 
-        return redirect()->route('settings.sms-campaigns.show', $campaign)->with('success', 'SMS campaign queued successfully.');
+        $message = 'SMS campaign queued successfully.';
+        if ($importSummary && $importSummary['skipped'] > 0) {
+            $message .= ' Imported ' . $importSummary['imported'] . ' recipients and skipped ' . $importSummary['skipped'] . '.';
+        }
+
+        return redirect()->route('settings.sms-campaigns.show', $campaign)->with('success', $message);
     }
 
     public function show(SmsCampaign $smsCampaign)
