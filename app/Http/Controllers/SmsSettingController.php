@@ -6,6 +6,8 @@ use App\Models\SmsSetting;
 use App\Models\User;
 use Illuminate\Http\Request;
 use App\Services\AuditService;
+use App\Services\FlexSmsService;
+use Illuminate\Validation\ValidationException;
 
 class SmsSettingController extends Controller
 {
@@ -75,5 +77,42 @@ class SmsSettingController extends Controller
         AuditService::log('sms_setting.update', $setting, $changes);
 
         return redirect()->back()->with('success', 'SMS Settings updated successfully.');
+    }
+
+    public function sendSingle(Request $request, FlexSmsService $smsService)
+    {
+        $data = $request->validate([
+            'recipient' => ['required', 'string', 'max:30'],
+            'message' => ['required', 'string', 'max:1000'],
+        ]);
+
+        if (!$request->user()->sms_enabled) {
+            throw ValidationException::withMessages([
+                'message' => 'SMS sending is disabled for your user account.',
+            ]);
+        }
+
+        $recipient = $smsService->formattedRecipient($data['recipient']);
+
+        if (!$smsService->isValidRecipient($recipient)) {
+            throw ValidationException::withMessages([
+                'recipient' => 'Enter a valid Tanzania phone number, for example 0712345678 or 255712345678.',
+            ]);
+        }
+
+        $sent = $smsService->sendSms($recipient, $data['message']);
+
+        AuditService::log('sms_single.send', null, [
+            'recipient' => $recipient,
+            'sent' => $sent,
+        ]);
+
+        if (!$sent) {
+            throw ValidationException::withMessages([
+                'message' => 'SMS could not be sent. Check the gateway settings and try again.',
+            ]);
+        }
+
+        return redirect()->back()->with('success', 'SMS sent successfully to ' . $recipient . '.');
     }
 }

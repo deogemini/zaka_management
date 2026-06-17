@@ -130,6 +130,40 @@
     <div class="col-12 col-xl-6">
         <div class="card">
             <div class="card-header">
+                <h5 class="card-title">Send Single SMS</h5>
+                <h6 class="card-subtitle text-muted">Send one text message to one phone number.</h6>
+            </div>
+            <div class="card-body">
+                <form action="{{ route('settings.sms.send-single') }}" method="POST">
+                    @csrf
+
+                    <div class="mb-3">
+                        <label class="form-label">Phone Number</label>
+                        <input type="text" name="recipient" class="form-control @error('recipient') is-invalid @enderror" value="{{ old('recipient') }}" placeholder="0712345678">
+                        @error('recipient')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Message</label>
+                        <textarea name="message" rows="6" maxlength="1000" class="form-control @error('message') is-invalid @enderror" placeholder="Write the SMS text here">{{ old('message') }}</textarea>
+                        @error('message')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                        <small class="text-muted">Maximum 1000 characters.</small>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">
+                        <i class="align-middle" data-feather="send"></i>
+                        Send SMS
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
                 <h5 class="card-title">Instructions</h5>
             </div>
             <div class="card-body">

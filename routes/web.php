@@ -37,6 +37,7 @@ Route::middleware('auth')->group(function () {
         Route::get('audit-trails', [App\Http\Controllers\AuditTrailController::class, 'index'])->name('audit_trails.index');
         Route::get('settings/sms', [SmsSettingController::class, 'index'])->name('settings.sms.index');
         Route::put('settings/sms', [SmsSettingController::class, 'update'])->name('settings.sms.update');
+        Route::post('settings/sms/send-single', [SmsSettingController::class, 'sendSingle'])->name('settings.sms.send-single');
         Route::get('settings/sms-campaigns', [SmsCampaignController::class, 'index'])->name('settings.sms-campaigns.index');
         Route::get('settings/sms-campaigns/create', [SmsCampaignController::class, 'create'])->name('settings.sms-campaigns.create');
         Route::post('settings/sms-campaigns', [SmsCampaignController::class, 'store'])->name('settings.sms-campaigns.store');
