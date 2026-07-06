@@ -6,6 +6,10 @@ use Illuminate\Database\Eloquent\Model;
 
 class Watoto extends Model
 {
+    protected $casts = [
+        'tarehe_ya_kuzaliwa' => 'date',
+    ];
+
     protected $fillable = [
         'jumuiya_id',
         'jina_la_mtoto',

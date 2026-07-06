@@ -12,10 +12,19 @@ class WatotoController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $watotos = Watoto::with('jumuiya')->withCount('shukranis')->orderBy('jina_la_mtoto')->get();
-        return view('watotos.index', compact('watotos'));
+        $watotos = Watoto::with('jumuiya')
+            ->withCount('shukranis')
+            ->when($request->filled('jumuiya_id'), function ($query) use ($request) {
+                $query->where('jumuiya_id', $request->jumuiya_id);
+            })
+            ->orderBy('jina_la_mtoto')
+            ->get();
+
+        $jumuiyas = Jumuiya::orderBy('jina_la_jumuiya')->get();
+
+        return view('watotos.index', compact('watotos', 'jumuiyas'));
     }
 
     /**

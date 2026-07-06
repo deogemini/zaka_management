@@ -55,12 +55,31 @@
                 </div>
             </div>
             <div class="card-body">
+                <form method="GET" action="{{ route('watotos.index') }}" class="row g-2 align-items-end mb-3">
+                    <div class="col-md-4">
+                        <label for="jumuiya_id" class="form-label">Chuja kwa Jumuiya</label>
+                        <select id="jumuiya_id" name="jumuiya_id" class="form-select" onchange="this.form.submit()">
+                            <option value="">-- Jumuiya Zote --</option>
+                            @foreach($jumuiyas as $jumuiya)
+                                <option value="{{ $jumuiya->id }}" {{ (string) request('jumuiya_id') === (string) $jumuiya->id ? 'selected' : '' }}>
+                                    {{ $jumuiya->jina_la_jumuiya }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+                    @if(request()->filled('jumuiya_id'))
+                        <div class="col-auto">
+                            <a href="{{ route('watotos.index') }}" class="btn btn-outline-secondary">Ondoa Chujio</a>
+                        </div>
+                    @endif
+                </form>
+
                 <table id="watotoTable" class="table table-hover my-0 w-100">
                     <thead>
                         <tr>
                             <th>#</th>
                             <th>Jina la Mtoto</th>
-                            <th>Tarehe ya Kuzaliwa</th>
+                            <th>Umri wa Sasa</th>
                             <th>Namba ya Mzazi</th>
                             <th>Jumuiya</th>
                             <th>Idadi ya Shukrani</th>
@@ -72,7 +91,14 @@
                             <tr>
                                 <td>{{ $loop->iteration }}</td>
                                 <td>{{ $mtoto->jina_la_mtoto }}</td>
-                                <td data-sort="{{ optional($mtoto->tarehe_ya_kuzaliwa)?->timestamp }}">{{ $mtoto->tarehe_ya_kuzaliwa ?? '-' }}</td>
+                                <td data-sort="{{ $mtoto->tarehe_ya_kuzaliwa?->timestamp ?? '' }}">
+                                    @if($mtoto->tarehe_ya_kuzaliwa)
+                                        <div>{{ $mtoto->tarehe_ya_kuzaliwa->age }} miaka</div>
+                                        <small class="text-muted">Tarehe ya kuzaliwa: {{ $mtoto->tarehe_ya_kuzaliwa->format('d/m/Y') }}</small>
+                                    @else
+                                        -
+                                    @endif
+                                </td>
                                 <td>{{ $mtoto->namba_ya_mzazi ?? '-' }}</td>
                                 <td>{{ $mtoto->jumuiya?->jina_la_jumuiya }}</td>
                                 <td><span class="badge bg-success">{{ $mtoto->shukranis_count }}</span></td>
@@ -120,7 +146,7 @@
                 infoFiltered: '(imuchujwa kutoka jumla ya rekodi _MAX_)'
             },
             columnDefs: [
-                { orderable: false, targets: [0, 5] }
+                { orderable: false, targets: [0, 5, 6] }
             ]
         });
     });
