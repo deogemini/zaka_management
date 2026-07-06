@@ -61,9 +61,9 @@
 
                     <div class="mb-3">
                         <label class="form-label">Message</label>
-                        <textarea id="campaign_message" name="message" rows="7" class="form-control @error('message') is-invalid @enderror" maxlength="1000" placeholder="Write the SMS campaign text here">{{ old('message') }}</textarea>
+                        <textarea id="campaign_message" name="message" rows="7" class="form-control @error('message') is-invalid @enderror" maxlength="160" placeholder="Write the SMS campaign text here">{{ old('message') }}</textarea>
                         @error('message') <div class="invalid-feedback">{{ $message }}</div> @enderror
-                        <small class="text-muted">This message will be sent to every selected recipient with a phone number.</small>
+                        <small class="text-muted"><span id="campaign_message_count">0</span>/160 characters. This message will be sent to every selected recipient with a phone number.</small>
                     </div>
 
                     <button type="submit" class="btn btn-primary">Send Campaign</button>
@@ -94,6 +94,8 @@ document.addEventListener('DOMContentLoaded', function () {
     const recipientsFileGroup = document.getElementById('recipients-file-group');
     const template = document.getElementById('sms_template');
     const message = document.getElementById('campaign_message');
+    const messageCount = document.getElementById('campaign_message_count');
+    const updateMessageCount = () => messageCount.textContent = message.value.length;
 
     function toggleRecipientFields() {
         jumuiyaGroup.style.display = targetType.value === 'jumuiya' ? '' : 'none';
@@ -103,8 +105,13 @@ document.addEventListener('DOMContentLoaded', function () {
     targetType.addEventListener('change', toggleRecipientFields);
     template.addEventListener('change', function () {
         const option = this.options[this.selectedIndex];
-        if (option.value) message.value = option.dataset.message || '';
+        if (option.value) {
+            message.value = (option.dataset.message || '').slice(0, 160);
+            updateMessageCount();
+        }
     });
+    message.addEventListener('input', updateMessageCount);
+    updateMessageCount();
     toggleRecipientFields();
 });
 </script>

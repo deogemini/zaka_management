@@ -25,9 +25,9 @@
 
                     <div class="mb-3">
                         <label class="form-label">Message</label>
-                        <textarea name="message" rows="7" class="form-control @error('message') is-invalid @enderror" maxlength="1000" placeholder="Write the SMS campaign text here">{{ old('message', $campaign->message) }}</textarea>
+                        <textarea id="campaign_message" name="message" rows="7" class="form-control @error('message') is-invalid @enderror" maxlength="160" placeholder="Write the SMS campaign text here">{{ old('message', $campaign->message) }}</textarea>
                         @error('message') <div class="invalid-feedback">{{ $message }}</div> @enderror
-                        <small class="text-muted">This text will be used for future sends or resending failed recipients.</small>
+                        <small class="text-muted"><span id="campaign_message_count">0</span>/160 characters. This text will be used for future sends or resending failed recipients.</small>
                     </div>
 
                     <button type="submit" class="btn btn-primary">Save Changes</button>
@@ -52,3 +52,15 @@
     </div>
 </div>
 @endsection
+
+@push('scripts')
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const message = document.getElementById('campaign_message');
+    const count = document.getElementById('campaign_message_count');
+    const updateCount = () => count.textContent = message.value.length;
+    message.addEventListener('input', updateCount);
+    updateCount();
+});
+</script>
+@endpush

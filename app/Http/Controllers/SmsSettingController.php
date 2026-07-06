@@ -85,7 +85,7 @@ class SmsSettingController extends Controller
     {
         $data = $request->validate([
             'recipient' => ['required', 'string', 'max:30'],
-            'message' => ['required', 'string', 'max:1000'],
+            'message' => ['required', 'string', 'max:160'],
         ]);
 
         if (!$request->user()->sms_enabled) {

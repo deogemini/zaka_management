@@ -62,7 +62,7 @@ class SmsTemplateController extends Controller
     {
         $data = $request->validate([
             'name' => ['required', 'string', 'max:255', Rule::unique('sms_templates', 'name')->ignore($smsTemplate)],
-            'message' => ['required', 'string', 'max:1000'],
+            'message' => ['required', 'string', 'max:160'],
             'is_active' => ['nullable', 'boolean'],
         ]);
 

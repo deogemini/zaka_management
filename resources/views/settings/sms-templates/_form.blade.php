@@ -6,9 +6,9 @@
 
 <div class="mb-3">
     <label class="form-label">Message</label>
-    <textarea id="template_message" name="message" rows="8" class="form-control @error('message') is-invalid @enderror" maxlength="1000" placeholder="Write the reusable SMS text here">{{ old('message', $smsTemplate->message ?? '') }}</textarea>
+    <textarea id="template_message" name="message" rows="8" class="form-control @error('message') is-invalid @enderror" maxlength="160" placeholder="Write the reusable SMS text here">{{ old('message', $smsTemplate->message ?? '') }}</textarea>
     @error('message') <div class="invalid-feedback">{{ $message }}</div> @enderror
-    <small class="text-muted"><span id="message_count">0</span>/1000 characters</small>
+    <small class="text-muted"><span id="message_count">0</span>/160 characters</small>
 </div>
 
 <div class="mb-3">

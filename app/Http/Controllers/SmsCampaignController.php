@@ -38,7 +38,7 @@ class SmsCampaignController extends Controller
     {
         $data = $request->validate([
             'title' => ['required', 'string', 'max:255'],
-            'message' => ['required', 'string', 'max:1000'],
+            'message' => ['required', 'string', 'max:160'],
             'target_type' => ['required', Rule::in(['all', 'jumuiya', 'excel'])],
             'jumuiya_id' => ['nullable', 'required_if:target_type,jumuiya', 'exists:jumuiyas,id'],
             'recipients_file' => ['nullable', 'required_if:target_type,excel', 'file', 'mimes:xlsx,xls,csv'],
@@ -140,7 +140,7 @@ class SmsCampaignController extends Controller
     {
         $data = $request->validate([
             'title' => ['required', 'string', 'max:255'],
-            'message' => ['required', 'string', 'max:1000'],
+            'message' => ['required', 'string', 'max:160'],
         ]);
 
         $smsCampaign->update($data);

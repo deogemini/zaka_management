@@ -158,11 +158,11 @@
 
                     <div class="mb-3">
                         <label class="form-label">Message</label>
-                        <textarea id="single_sms_message" name="message" rows="6" maxlength="1000" class="form-control @error('message') is-invalid @enderror" placeholder="Write the SMS text here">{{ old('message') }}</textarea>
+                        <textarea id="single_sms_message" name="message" rows="6" maxlength="160" class="form-control @error('message') is-invalid @enderror" placeholder="Write the SMS text here">{{ old('message') }}</textarea>
                         @error('message')
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
-                        <small class="text-muted">Maximum 1000 characters.</small>
+                        <small class="text-muted"><span id="single_sms_count">0</span>/160 characters.</small>
                     </div>
 
                     <button type="submit" class="btn btn-primary">
@@ -200,11 +200,19 @@
 document.addEventListener('DOMContentLoaded', function () {
     const template = document.getElementById('single_sms_template');
     const message = document.getElementById('single_sms_message');
+    const count = document.getElementById('single_sms_count');
+    const updateCount = () => count.textContent = message.value.length;
+
+    message.addEventListener('input', updateCount);
 
     template.addEventListener('change', function () {
         const option = this.options[this.selectedIndex];
-        if (option.value) message.value = option.dataset.message || '';
+        if (option.value) {
+            message.value = (option.dataset.message || '').slice(0, 160);
+            updateCount();
+        }
     });
+    updateCount();
 });
 </script>
 @endpush
