@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\SmsSetting;
 use App\Models\User;
+use App\Models\SmsTemplate;
 use Illuminate\Http\Request;
 use App\Services\AuditService;
 use App\Services\FlexSmsService;
@@ -19,8 +20,9 @@ class SmsSettingController extends Controller
             'is_enabled' => true,
         ]);
         $users = User::orderBy('name')->get();
+        $templates = SmsTemplate::where('is_active', true)->orderBy('name')->get();
 
-        return view('settings.sms', compact('setting', 'users'));
+        return view('settings.sms', compact('setting', 'users', 'templates'));
     }
 
     public function update(Request $request)

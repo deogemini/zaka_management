@@ -124,6 +124,11 @@
               <i class="align-middle" data-feather="send"></i> <span class="align-middle">SMS Campaigns</span>
             </a>
 					</li>
+                    <li class="sidebar-item {{ request()->routeIs('settings.sms-templates.*') ? 'active' : '' }}">
+						<a class="sidebar-link" href="{{ route('settings.sms-templates.index') }}">
+              <i class="align-middle" data-feather="file-text"></i> <span class="align-middle">SMS Templates</span>
+            </a>
+					</li>
                     @endif
 				</ul>
 			</div>

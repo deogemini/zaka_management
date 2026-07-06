@@ -146,8 +146,19 @@
                     </div>
 
                     <div class="mb-3">
+                        <label for="single_sms_template" class="form-label">SMS Template</label>
+                        <select id="single_sms_template" class="form-select">
+                            <option value="">-- Write a custom message --</option>
+                            @foreach($templates as $template)
+                                <option value="{{ $template->id }}" data-message="{{ $template->message }}">{{ $template->name }}</option>
+                            @endforeach
+                        </select>
+                        <small class="text-muted">Selecting a template will fill the message below.</small>
+                    </div>
+
+                    <div class="mb-3">
                         <label class="form-label">Message</label>
-                        <textarea name="message" rows="6" maxlength="1000" class="form-control @error('message') is-invalid @enderror" placeholder="Write the SMS text here">{{ old('message') }}</textarea>
+                        <textarea id="single_sms_message" name="message" rows="6" maxlength="1000" class="form-control @error('message') is-invalid @enderror" placeholder="Write the SMS text here">{{ old('message') }}</textarea>
                         @error('message')
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
@@ -183,3 +194,17 @@
     </div>
 </div>
 @endsection
+
+@push('scripts')
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const template = document.getElementById('single_sms_template');
+    const message = document.getElementById('single_sms_message');
+
+    template.addEventListener('change', function () {
+        const option = this.options[this.selectedIndex];
+        if (option.value) message.value = option.dataset.message || '';
+    });
+});
+</script>
+@endpush

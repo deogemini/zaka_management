@@ -10,6 +10,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\SmsSettingController;
 use App\Http\Controllers\SmsCampaignController;
+use App\Http\Controllers\SmsTemplateController;
 use App\Http\Middleware\AdminMiddleware;
 
 Route::get('/', function () {
@@ -38,6 +39,16 @@ Route::middleware('auth')->group(function () {
         Route::get('settings/sms', [SmsSettingController::class, 'index'])->name('settings.sms.index');
         Route::put('settings/sms', [SmsSettingController::class, 'update'])->name('settings.sms.update');
         Route::post('settings/sms/send-single', [SmsSettingController::class, 'sendSingle'])->name('settings.sms.send-single');
+        Route::resource('settings/sms-templates', SmsTemplateController::class)
+            ->except('show')
+            ->names([
+                'index' => 'settings.sms-templates.index',
+                'create' => 'settings.sms-templates.create',
+                'store' => 'settings.sms-templates.store',
+                'edit' => 'settings.sms-templates.edit',
+                'update' => 'settings.sms-templates.update',
+                'destroy' => 'settings.sms-templates.destroy',
+            ]);
         Route::get('settings/sms-campaigns', [SmsCampaignController::class, 'index'])->name('settings.sms-campaigns.index');
         Route::get('settings/sms-campaigns/create', [SmsCampaignController::class, 'create'])->name('settings.sms-campaigns.create');
         Route::post('settings/sms-campaigns', [SmsCampaignController::class, 'store'])->name('settings.sms-campaigns.store');

@@ -50,8 +50,18 @@
                     </div>
 
                     <div class="mb-3">
+                        <label for="sms_template" class="form-label">SMS Template</label>
+                        <select id="sms_template" class="form-select">
+                            <option value="">-- Write a custom message --</option>
+                            @foreach($templates as $template)
+                                <option value="{{ $template->id }}" data-message="{{ $template->message }}">{{ $template->name }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
                         <label class="form-label">Message</label>
-                        <textarea name="message" rows="7" class="form-control @error('message') is-invalid @enderror" maxlength="1000" placeholder="Write the SMS campaign text here">{{ old('message') }}</textarea>
+                        <textarea id="campaign_message" name="message" rows="7" class="form-control @error('message') is-invalid @enderror" maxlength="1000" placeholder="Write the SMS campaign text here">{{ old('message') }}</textarea>
                         @error('message') <div class="invalid-feedback">{{ $message }}</div> @enderror
                         <small class="text-muted">This message will be sent to every selected recipient with a phone number.</small>
                     </div>
@@ -82,6 +92,8 @@ document.addEventListener('DOMContentLoaded', function () {
     const targetType = document.getElementById('target_type');
     const jumuiyaGroup = document.getElementById('jumuiya-group');
     const recipientsFileGroup = document.getElementById('recipients-file-group');
+    const template = document.getElementById('sms_template');
+    const message = document.getElementById('campaign_message');
 
     function toggleRecipientFields() {
         jumuiyaGroup.style.display = targetType.value === 'jumuiya' ? '' : 'none';
@@ -89,6 +101,10 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     targetType.addEventListener('change', toggleRecipientFields);
+    template.addEventListener('change', function () {
+        const option = this.options[this.selectedIndex];
+        if (option.value) message.value = option.dataset.message || '';
+    });
     toggleRecipientFields();
 });
 </script>

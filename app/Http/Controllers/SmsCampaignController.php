@@ -7,6 +7,7 @@ use App\Imports\SmsCampaignRecipientsImport;
 use App\Models\Jumuiya;
 use App\Models\Mwanajumuiya;
 use App\Models\SmsCampaign;
+use App\Models\SmsTemplate;
 use App\Services\FlexSmsService;
 use App\Services\AuditService;
 use Illuminate\Http\Request;
@@ -28,8 +29,9 @@ class SmsCampaignController extends Controller
     public function create()
     {
         $jumuiyas = Jumuiya::orderBy('jina_la_jumuiya')->get();
+        $templates = SmsTemplate::where('is_active', true)->orderBy('name')->get();
 
-        return view('settings.sms-campaigns.create', compact('jumuiyas'));
+        return view('settings.sms-campaigns.create', compact('jumuiyas', 'templates'));
     }
 
     public function store(Request $request, FlexSmsService $smsService)
