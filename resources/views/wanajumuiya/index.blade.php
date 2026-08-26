@@ -86,6 +86,7 @@
                             <th>Kadi Namba</th>
                             <th>Namba ya Simu</th>
                             <th>Jumuiya</th>
+                            <th>Kanda</th>
                             <th>Zaka Count</th>
                             <th>Actions</th>
                         </tr>
@@ -98,6 +99,7 @@
                                 <td>{{ $mwana->kadi_namba }}</td>
                                 <td>{{ $mwana->namba_ya_simu }}</td>
                                 <td>{{ $mwana->jumuiya->jina_la_jumuiya }}</td>
+                                <td>{{ optional(optional($mwana->jumuiya)->kanda)->jina_la_kanda ?? '-' }}</td>
                                 <td><a href="{{ route('zakas.index', ['mwanajumuiya_id' => $mwana->id]) }}"><span class="badge bg-primary">{{ $mwana->zakas_count }}</span></a></td>
                                 <td>
                                     <a href="{{ route('mwanajumuiya.edit', $mwana->id) }}" class="btn btn-sm btn-info">Hariri</a>
